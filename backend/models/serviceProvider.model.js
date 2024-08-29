@@ -27,11 +27,11 @@ const serviceProviderSchema = mongoose.Schema({
         type:[Number],
     },
     availability:{
-        type:String
+        type:[String]
     },
     servicesOffered:{
         type:[String]
     }
 },{timestamps:true})
 
-export const serviceProviderModel = mongoose.model("ServiceProvider",serviceProviderSchema)
+export const ServiceProviderModel = mongoose.model("ServiceProvider",serviceProviderSchema)

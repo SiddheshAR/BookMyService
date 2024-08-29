@@ -3,9 +3,10 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv"
 import connectDB from "./utils/db.js";
+import UserRoutes from "./routes/user.routes.js";
+import ServiceProvider from "./routes/serviceProvider.route.js"
 dotenv.config({})
 const app = express();
-
 
 // Middleware
 app.use(express.json());
@@ -20,12 +21,8 @@ const corsOptions = {
 app.use(cors(corsOptions))
 const PORT = 5001;
 
-app.get("/home",(req,res)=>{
-    return res.status(200).json({
-        message:"Backend",
-        success:true
-    })
-})
+app.use("/api/v1/user",UserRoutes);
+app.use("/api/v1/serviceProvider",ServiceProvider)
 
 app.listen(PORT,()=>{
     connectDB();
