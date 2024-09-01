@@ -32,3 +32,20 @@ export const CreateService = async(req,res)=>{
         }))
     }
 }
+
+export const getAllServices = async(req,res)=>{
+    try{
+        let services = await ServiceModel.find();
+        return(res.status(200).json({
+            message:"Services fetched.",
+            success:true,
+            services
+        }));
+    }catch(error){
+        return(res.status(400).json({
+            message:"Something went wrong.",
+            success:false
+        }))
+    }
+}
+

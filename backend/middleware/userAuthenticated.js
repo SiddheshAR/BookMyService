@@ -11,7 +11,7 @@ const isAuthenticated = async(req,res,next)=>{
             }))
         }
         const decode = await jwt.verify(token,process.env.SECRET_KEY);
-        console.log(decode)
+        // console.log(decode)
         if(!decode){
             return(res.status(400).json({
                 message:"Authentication Failed",

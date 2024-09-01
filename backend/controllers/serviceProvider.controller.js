@@ -113,4 +113,25 @@ export const serviceProviderLogout = (req,res)=>{
     }
 }
 
+export const getServiceProviders =async (req,res)=>{
+    try{
+        let data = await ServiceProviderModel.find();
+        if(!data){
+            return(res.status(400).json({
+                message:"Something went wrong",
+                success:false
+            }))
+        }
+        return(res.status(200).json({
+            message:"Data Fetched",
+            data,
+            success:true
+        }))
+    }catch(error){
+        return(res.status(400).json({
+            message:"Error Fetching Service Providers Data.",
+            success:false
+        }))
+    }
+}
 

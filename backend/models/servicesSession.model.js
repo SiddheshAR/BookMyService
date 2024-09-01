@@ -1,8 +1,8 @@
-import  mongoose  from "mongoose";
+import  mongoose,{Schema}  from "mongoose";
 
 const ServiceSessionSchema = mongoose.Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    serviceProviderId:{type:Schema.Types.ObjectId,ref:"ServiceProvider",required:true},
+    serviceProviderId:{type:Schema.Types.ObjectId,ref:"ServiceProvider",required:false},
     service: { type: String, required: true },
     time: { type: Date, required: true },
     location: { type: String, required: true },

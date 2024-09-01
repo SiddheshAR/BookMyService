@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 export const ManagerLogin = async (req,res) =>{
     try{
         const {email,password} = req.body;
-        console.log(email,password);
         if(!email || !password){
             return(res.status(400).json({
                 message:"Please input all fields",
@@ -13,7 +12,7 @@ export const ManagerLogin = async (req,res) =>{
             }))
         }
         const manager = await Manager.findOne({email});
-        console.log(manager);
+        // console.log(manager);
         if(!manager){
             return(
                 res.status(400).json({
@@ -23,7 +22,7 @@ export const ManagerLogin = async (req,res) =>{
             )
         }
         const PassCheck = await bcrypt.compare(password,manager.password);
-        console.log(PassCheck);
+        // console.log(PassCheck);
         if(!PassCheck){
             return(
                 res.status(400).json({
