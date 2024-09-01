@@ -43,9 +43,7 @@ export const serviceProviderRegister =async(req,res)=>{
 
 export const ServiceProviderLogin = async(req,res)=>{
     try{
-        console.log("debug 1")
         const {email,password}=req.body;
-        // console.log(email,password);
         if(!email || !password){
             return(
                 res.status(400).json({
@@ -55,7 +53,6 @@ export const ServiceProviderLogin = async(req,res)=>{
             )
         }
         let UserCheck = await ServiceProviderModel.findOne({email});
-        // console.log(UserCheck);
 
         if(!UserCheck){
             return(res.status(400).json({
@@ -63,22 +60,20 @@ export const ServiceProviderLogin = async(req,res)=>{
                 success:false
             }))
         }
-        console.log('t1')
-
         const passCheck = await bcrypt.compare(password,UserCheck.password);
-        console.log('t2')
         if(!passCheck){
             return(res.status(400).json({
                 message:"Incorrect password",
                 success:false
             }))
         }
-        console.log("debug 4")
+
         const tokenData = {
-            serviceProviderId:UserCheck._id
+            userId:UserCheck._id,
+            role:"serviceProvider"
         }
         const token = await jwt.sign(tokenData,process.env.SECRET_KEY,{expiresIn:'1d'});
-        console.log("debug 5")
+
         let data = {
             id:UserCheck._id,
             fullname:UserCheck?.fullname,
@@ -90,7 +85,6 @@ export const ServiceProviderLogin = async(req,res)=>{
             availability:UserCheck?.availability || [],
             servicesOffered:UserCheck?.servicesOffered || []
         }
-        console.log("debug 6")
 
         return(res.status(200).cookie("token",token,{maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
             message:"Login Success",
@@ -105,5 +99,18 @@ export const ServiceProviderLogin = async(req,res)=>{
     }
 }
 
+export const serviceProviderLogout = (req,res)=>{
+    try{
+        return res.status(200).cookie("token","",{maxAge:0}).json({
+            message:"Logged Out Successfully",
+            success:true
+        })
+    }catch(error){
+        return(res.status(400).json({
+            message:"Something went wrong",
+            success:false
+        }))
+    }
+}
 
 

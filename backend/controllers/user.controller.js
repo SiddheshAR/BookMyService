@@ -65,7 +65,8 @@ export const UserLogin = async(req,res)=>{
             }))
         }
         const tokenData = {
-            userId:ReqUser._id
+            userId:ReqUser._id,
+            role:"user"
         }
         const token = await jwt.sign(tokenData,process.env.SECRET_KEY,{expiresIn:'1d'});
         let user = {
@@ -82,6 +83,20 @@ export const UserLogin = async(req,res)=>{
         ))
     }catch(error){
         console.log(error)
+    }
+}
+
+export const userLogout = (req,res)=>{
+    try{
+        return(res.status(200).cookie("token","",{maxAge:0}).json({
+            message: "Logged out successfully.",
+            success: true
+        }))
+    }catch(error){
+        return (res.status(400).json({
+            message:"Something went wrong.",
+            success:false
+        }))
     }
 }
 

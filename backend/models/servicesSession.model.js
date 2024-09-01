@@ -1,6 +1,6 @@
 import  mongoose  from "mongoose";
 
-const serviceSchema = mongoose.Schema({
+const ServiceSessionSchema = mongoose.Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     serviceProviderId:{type:Schema.Types.ObjectId,ref:"ServiceProvider",required:true},
     service: { type: String, required: true },
@@ -16,4 +16,4 @@ const serviceSchema = mongoose.Schema({
 
 },{ timestamps: true });
 
-export const service = mongoose.model("Service",serviceSchema);
+export const ServiceSessionModel = mongoose.model("ServiceSession",ServiceSessionSchema);
