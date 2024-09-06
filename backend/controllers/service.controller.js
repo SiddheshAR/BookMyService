@@ -4,8 +4,8 @@ import { ServiceModel } from "../models/service.model.js";
 
 export const CreateService = async(req,res)=>{
     try{
-        const {name,img,duration,price,description} = req.body;
-        if(!name || !img || !duration || !price || !description){
+        const {name,img,duration,price,description,offerings} = req.body;
+        if(!name || !img || !duration || !price || !description || !offerings){
             return(res.status(400).json({
                 message:"Please submit all the requried data."
             }))
@@ -15,7 +15,8 @@ export const CreateService = async(req,res)=>{
             img,
             duration,
             price,
-            description
+            description,
+            offerings
         });
 
         if(result){
@@ -49,3 +50,26 @@ export const getAllServices = async(req,res)=>{
     }
 }
 
+export const getServiceByID = async(req,res)=>{
+    try{
+        let serviceID = req.params.id;
+        let data = await ServiceModel.findById(serviceID);
+        if(!data){
+            return(res.status(400).json({
+                message:"Unable to find Service",
+                success:false
+            }))
+        }else{
+            return(res.status(200).json({
+               message:"Data fetched success",
+               success:true,
+               data
+            }))
+        }
+    }catch(error){
+        return(res.status(400).json({
+            message:"Something went wrong.",
+            success:false
+        }))
+    }   
+}
