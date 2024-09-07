@@ -63,7 +63,7 @@ function Navbar() {
   }
 
   return (
-    <div className='max-w-7xl  mx-auto mt-3 mb-3 h-16 relative  '>
+    <div className='max-w-7xl  mx-auto mt-3 md:mb-3 h-14 md:h-16 relative  '>
       <div className='flex flex-row justify-between items-center px-4 md:px-8'>
                         {/* Logo Container */}
             <div className='w-28 md:w-32  h-12 md:h-16 overflow-hidden'>
@@ -106,7 +106,7 @@ function Navbar() {
             <div className='md:hidden' onClick={handleMenuToggle}><Menu/></div>
       </div>
       {/* Mobile Sidebar NavLinks */}
-      <div className={`absolute z-10 min-h-[1200px] bg-orange-50  transition-all duration-300 ${toggleMenu?`left-0`:`left-[-100%]`} w-[200px] `}>
+      <div className={`absolute z-50 min-h-[1200px] bg-orange-50  transition-all duration-300 ${toggleMenu?`left-0`:`left-[-100%]`} w-[200px] `}>
             <div className='flex flex-col gap-2 mt-8 px-4 '>
                 {NavLinks.map((e,index)=>(<Link to={"/"} key={index}>
                 <div

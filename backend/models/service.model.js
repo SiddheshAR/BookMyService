@@ -11,7 +11,9 @@ const serviceSchema = mongoose.Schema({
             name: { type: String, required: true },  // Offering name
             price: { type: Number, required: true }  // Offering price
         }
-    ]
+    ],
+    rating:{type:Number,required:true},
+    tags:[{name:{type:String}}]
 });
 
 export const ServiceModel = mongoose.model("Service",serviceSchema);

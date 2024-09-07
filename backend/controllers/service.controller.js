@@ -4,8 +4,8 @@ import { ServiceModel } from "../models/service.model.js";
 
 export const CreateService = async(req,res)=>{
     try{
-        const {name,img,duration,price,description,offerings} = req.body;
-        if(!name || !img || !duration || !price || !description || !offerings){
+        const {name,img,duration,price,description,offerings,tags,rating} = req.body;
+        if(!name || !img || !duration || !price || !description || !offerings || !tags || !rating){
             return(res.status(400).json({
                 message:"Please submit all the requried data."
             }))
@@ -16,7 +16,9 @@ export const CreateService = async(req,res)=>{
             duration,
             price,
             description,
-            offerings
+            offerings,
+            tags,
+            rating,
         });
 
         if(result){
