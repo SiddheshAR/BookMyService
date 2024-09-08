@@ -72,38 +72,47 @@ function Navbar() {
                 </Link>
             </div>
             {/* Desktop Nav Links */}
-            <div className='hidden md:flex  flex-row gap-4'>
-                {NavLinks.map((e,index)=>(<Link to={e.link} key={index}>
-                <div 
-                onMouseEnter={()=>{if(e?.subNavbar)
-                    {
-                        const dropdown = document.getElementById(`dropdown-${index}`);
-                        if (dropdown) {
-                          dropdown.style.display = 'block';
+
+            <div className='flex flex-row gap-4 items-center'>
+                
+                <div className='hidden md:flex  flex-row gap-4'>
+                    {NavLinks.map((e,index)=>(<Link to={e.link} key={index}>
+                    <div 
+                    onMouseEnter={()=>{if(e?.subNavbar)
+                        {
+                            const dropdown = document.getElementById(`dropdown-${index}`);
+                            if (dropdown) {
+                            dropdown.style.display = 'block';
+                            }
                         }
-                    }
-                }}  
-                onMouseLeave={()=>{if(e?.subNavbar)
-                    {
-                        const dropdown = document.getElementById(`dropdown-${index}`);
-                        if (dropdown) {
-                          dropdown.style.display = 'none';
+                    }}  
+                    onMouseLeave={()=>{if(e?.subNavbar)
+                        {
+                            const dropdown = document.getElementById(`dropdown-${index}`);
+                            if (dropdown) {
+                            dropdown.style.display = 'none';
+                            }
                         }
-                    }
-                }} 
-                    className=''>
-                    <h2>{e.name}</h2>
-                    <div className='absolute  '>
-                        {e?.subNavbar ? 
-                        <div id={`dropdown-${index}`}>
-                            {e?.subNavbar.map((f,index) => (<h2 key={index}>{f.name}</h2>))}
-                        </div>:null}
+                    }} 
+                        className=''>
+                        <h2>{e.name}</h2>
+                        <div className='absolute  '>
+                            {e?.subNavbar ? 
+                            <div id={`dropdown-${index}`}>
+                                {e?.subNavbar.map((f,index) => (<h2 key={index}>{f.name}</h2>))}
+                            </div>:null}
+                        </div>
                     </div>
+                    </Link>))}
                 </div>
-                </Link>))}
+                <div className='flex flex-row gap-2 items-center'>
+                    <button className='bg-yellow-300 hover:bg-yellow-400 rounded-md font-semibold py-1 px-2 md:py-2 md:px-5 text-[#123446]'>Login</button>
+                    <button  className='py-1 px-2 md:py-2 md:px-5 text-gray-900 border rounded-md border-gray-200 hover:bg-gray-100 hover:text-sky-900'>SignUp</button>
+                    <div className='md:hidden' onClick={handleMenuToggle}><Menu/></div>
+                </div>
             </div>
             {/* Menu Toggle for Mobile*/}
-            <div className='md:hidden' onClick={handleMenuToggle}><Menu/></div>
+
       </div>
       {/* Mobile Sidebar NavLinks */}
       <div className={`absolute z-50 min-h-[1200px] bg-orange-50  transition-all duration-300 ${toggleMenu?`left-0`:`left-[-100%]`} w-[200px] `}>
