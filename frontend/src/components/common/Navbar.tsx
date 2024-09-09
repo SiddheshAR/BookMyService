@@ -7,8 +7,19 @@ import {ChevronDown, Menu } from 'lucide-react';
 // import { USER_API_END_POINT } from '@/utils/constant';
 // import { setUser } from '@/redux/slices/authSlice';
 import logo from "../../assets/logo_trim.png"
-
+import { useDispatch, useSelector } from 'react-redux';
+import {RootState} from '../../redux/store';
+import { UserType} from '../../../types/users'
+import { setUser } from '../../redux/slices/userSlice';
+import axios from 'axios';
+import { USER_API_ENDPOINT } from '../../utils/constants';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 function Navbar() {
+   
+    const dispatch = useDispatch();
+    const user:UserType | null=useSelector((store:RootState)=>store.auth.user);
+    const notify = (text:string) => toast.error(text);
     const [toggleMenu,setToggleMenu] = React.useState(false);
     const NavLinks = [
         {
@@ -61,6 +72,22 @@ function Navbar() {
         }
       }
   }
+  const handleLogout = async()=>{
+    try{
+        const res = await axios.get(`${USER_API_ENDPOINT}/logout`,{withCredentials: true});
+        
+        if(res){
+            console.log("Logged out Succesfully");
+            dispatch(setUser(null));
+            notify("Logged out successfully.")
+        }else{
+            console.log("Something went wrong 1.")
+        }
+    }catch(error){
+        console.log(error)
+        console.log("Something went wrong.2")
+    }
+  }
 
   return (
     <div className='max-w-7xl  mx-auto mt-3 md:mb-3 h-14 md:h-16 relative  '>
@@ -105,11 +132,12 @@ function Navbar() {
                     </div>
                     </Link>))}
                 </div>
+                {user? <button onClick={handleLogout} className='bg-yellow-300 hover:bg-yellow-400 rounded-md font-semibold py-1 px-2 md:py-2 md:px-5 text-[#123446]'  >Logout</button>:
                 <div className='flex flex-row gap-2 items-center'>
-                    <button className='bg-yellow-300 hover:bg-yellow-400 rounded-md font-semibold py-1 px-2 md:py-2 md:px-5 text-[#123446]'>Login</button>
-                    <button  className='py-1 px-2 md:py-2 md:px-5 text-gray-900 border rounded-md border-gray-200 hover:bg-gray-100 hover:text-sky-900'>SignUp</button>
+                    <Link to="/login"><button className='bg-yellow-300 hover:bg-yellow-400 rounded-md font-semibold py-1 px-2 md:py-2 md:px-5 text-[#123446]'>Login</button></Link>
+                    <Link to="/register"><button  className='py-1 px-2 md:py-2 md:px-5 text-gray-900 border rounded-md border-gray-200 hover:bg-gray-100 hover:text-sky-900'>SignUp</button></Link>
                     <div className='md:hidden' onClick={handleMenuToggle}><Menu/></div>
-                </div>
+                </div>}
             </div>
             {/* Menu Toggle for Mobile*/}
 

@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home.tsx';
 import ServiceDescription from './pages/ServiceDescription.tsx';
 import Login from './pages/Login.tsx';
+import Register from './pages/SignUp.tsx';
 
 
 const appRouter = createBrowserRouter([
@@ -24,6 +25,12 @@ const appRouter = createBrowserRouter([
     path:'/login',
     element:<Layout>
       <Login/>
+    </Layout>
+  },
+  {
+    path:'/register',
+    element:<Layout>
+      <Register/>
     </Layout>
   }
 ])

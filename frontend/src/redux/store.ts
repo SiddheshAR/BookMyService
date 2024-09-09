@@ -20,7 +20,7 @@ const persistConfig = {
   }
 
   const rootReducer = combineReducers({
-        auth:"authSlice"
+        auth:authSlice
   })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -34,4 +34,5 @@ const store = configureStore({
         },
       }),
 })
+export type RootState = ReturnType<typeof rootReducer>;
 export default store;

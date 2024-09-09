@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {Service} from "../../types/services";
 import { GoStarFill } from "react-icons/go";
@@ -53,7 +53,7 @@ function ServiceDescription() {
     <div>
         <div className='max-w-6xl mx-auto my-10 px-5 md:px-10 '>
             <div className='my-4'>
-            <button className='bg-[#0d2836] py-2 px-3  rounded-md text-white font-semibold flex flex-row items-center gap-1'><ArrowLeft className='w-4 h-4' /> Back</button> 
+            <Link to="/"><button  className='bg-[#0d2836] py-2 px-3  rounded-md text-white font-semibold flex flex-row items-center gap-1'><ArrowLeft className='w-4 h-4' /> Back</button> </Link>
 
             </div>
             <div className='flex flex-col md:flex-row gap-10'>

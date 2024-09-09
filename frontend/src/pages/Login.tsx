@@ -4,19 +4,50 @@ import stars from '../assets/stars.svg'
 import loginPic1 from '../assets/login/login1.jpg'
 import loginPic2 from '../assets/login/login2.jpg'
 import loginPic3 from '../assets/login/login3.jpg'
+import 'react-toastify/dist/ReactToastify.css';
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { USER_API_ENDPOINT } from '../utils/constants'
+import {toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+import { setUser } from '../redux/slices/userSlice'
+import { Dispatch } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
+    function Login() {
+        const navigate = useNavigate();
+        const dispatch = useDispatch();
+        const notify = (text:string) => toast.error(text);
+        const [input,setInput]=useState({
+            email:"",
+            password:""
+        })
 
-import { Link } from 'react-router-dom'
-function Login() {
-
-    const [input,setInput]=useState({
-        email:"",
-        password:""
-    })
-
-    const inputHandle = (e)=>{
-        setInput({...input,[e.target.name]:e.target.value})
-    }   
-    console.log(input);
+        const inputHandle = (e)=>{
+            setInput({...input,[e.target.name]:e.target.value})
+        }   
+        const handleSubmit = async(e)=>{
+            e.preventDefault();
+            try{
+                const resp = await axios.post(`${USER_API_ENDPOINT}/login`,input,{
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    withCredentials: true,
+                });
+                if (resp?.data?.success === false) {
+                    notify(resp?.data?.message);
+                } else {
+                    dispatch(setUser(resp?.data?.user));
+                    navigate('/');
+                    toast.success('Login successful!');
+                }
+            }catch(error:any){
+                if (error.response) {
+                    // Server responded with a status other than 2xx
+                    notify(error.response.data.message || "Something went wrong on the server.");
+                }
+            }
+        }
   return (
     <div className=''>
         <div className='max-w-6xl mx-auto py-10 px-10 flex flex-col md:flex-row '>
@@ -59,11 +90,12 @@ function Login() {
                         <label className='text-[14px] font-semibold text-gray-700' htmlFor='password'>Password</label>
                         <input  className='py-2  px-3 border border-gray-200 rounded-md  outline-gray-300 '  name="password" type="password" value={input.password}  onChange={inputHandle} placeholder='Enter Password'/>
                     </div>
-                    <button className='bg-yellow-300 hover:bg-yellow-400 rounded-md text-[17px] py-2 text-[#0d2836] font-semibold ' >Log in</button>
+                    <button onClick={handleSubmit} className='bg-yellow-300 hover:bg-yellow-400 rounded-md text-[17px] py-2 text-[#0d2836] font-semibold ' >Log in</button>
                     <p className='text-gray-400 text-[15px] font-semibold'>Don't have an account? <Link to="/"><span className='text-blue-700 hover:text-blue-800'>Register here</span></Link> </p>
                 </form>
             </div>
         </div>
+
     </div>
   )
 }

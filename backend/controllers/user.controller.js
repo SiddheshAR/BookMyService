@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const register = async(req,res)=>{
     try{
-        const {fullname,email,password,phoneNumber} = req.body;
+        const {fullname,email,password,phoneNumber,address} = req.body;
         if(!fullname || !email || !password || !phoneNumber){
             return(res.status(400).json({
                 message:"Please add all fields",
@@ -24,7 +24,8 @@ export const register = async(req,res)=>{
             fullname,
             email,
             password:hasedPassword,
-            phoneNumber
+            phoneNumber,
+            role:"user"
         })
         if(resStatus){
             return(res.status(200).json({
@@ -72,7 +73,10 @@ export const UserLogin = async(req,res)=>{
         let user = {
             _id: ReqUser._id,
             fullname: ReqUser.fullname,
-            email: ReqUser.email
+            email: ReqUser.email,
+            address:ReqUser.address,
+            role:ReqUser.role,
+            phoneNumber:ReqUser.phoneNumber
         }
         return(res.status(200).cookie("token",token,{ maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json(
            { 
@@ -88,6 +92,7 @@ export const UserLogin = async(req,res)=>{
 
 export const userLogout = (req,res)=>{
     try{
+        console.log("Debug 1")
         return(res.status(200).cookie("token","",{maxAge:0}).json({
             message: "Logged out successfully.",
             success: true
