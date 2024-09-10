@@ -1,49 +1,56 @@
 import { PlugZap } from 'lucide-react'
 import React from 'react'
-
+import { Link } from 'react-router-dom'
+import { GiVacuumCleaner } from "react-icons/gi";
+import { GiHairStrands } from "react-icons/gi";
+import { TbAirConditioning } from "react-icons/tb";
+import { TbMassage } from "react-icons/tb";
+import { FaBugSlash } from "react-icons/fa6";
 function ServicesSection() {
+
+
     const data = [
         {
-            name:"Service 1",
-            desc:"Lorem ipsum sdfs dsff sdfsjdf sdfs ij dfisd fjs sdis f is fsdfs sdfd sdfdfsd sdf fs",
-            icon:<PlugZap className='w-9 h-9'/>,
-            color:"bg-green-400",
-            link:""
-        },
-        {
-            name:"Service 1",
-            desc:"Lorem ipsum sdfs dsff sdfsjdf sdfs ij dfisd fjs sdis f is fsdfs sdfd sdfdfsd sdf fs",
-            icon:<PlugZap className='w-9 h-9'/>,
-            color:"bg-yellow-400",
-            link:""
-        },
-        {
-            name:"Service 1",
-            desc:"Lorem ipsum sdfs dsff sdfsjdf sdfs ij dfisd fjs sdis f is fsdfs sdfd sdfdfsd sdf fs",
-            icon:<PlugZap className='w-9 h-9'/>,
-            color:"bg-blue-400",
-            link:""
-        },
-        {
-            name:"Service 1",
-            desc:"Lorem ipsum sdfs dsff sdfsjdf sdfs ij dfisd fjs sdis f is fsdfs sdfd sdfdfsd sdf fs",
-            icon:<PlugZap className='w-9 h-9'/>,
-            color:"bg-orange-400",
-            link:""
-        },
-        {
-            name:"Service 1",
-            desc:"Lorem ipsum sdfs dsff sdfsjdf sdfs ij dfisd fjs sdis f is fsdfs sdfd sdfdfsd sdf fs",
-            icon:<PlugZap className='w-9 h-9'/>,
+            name:"House Cleaning Service",
+            desc:"Reliable and thorough cleaning for a sparkling home, tailored to your specific needs and preferences.",
+            icon:<GiVacuumCleaner className='w-9 h-9'/>,
             color:"bg-purple-400",
-            link:""
+            link:"/service/66db5784160a2e9fc7336ff8"
         },
         {
-            name:"Service 1",
-            desc:"Lorem ipsum sdfs dsff sdfsjdf sdfs ij dfisd fjs sdis f is fsdfs sdfd sdfdfsd sdf fs",
+            name:"Salon Service",
+            desc:"Expert hair and beauty treatments for a fresh new look, feel, and enhanced confidence always.",
+            icon:<GiHairStrands className='w-9 h-9'/>,
+            color:"bg-green-400",
+            link:"/service/66db56d9160a2e9fc7336fdd"
+        },
+        {
+            name:"AC Repair & Servicing",
+            desc:"Fast and efficient air conditioner maintenance, repair, installation, and servicing for optimal performance.",
+            icon:<TbAirConditioning className='w-9 h-9'/>,
+            color:"bg-yellow-400",
+            link:"/service/66db5725160a2e9fc7336fe3"
+        },
+        {
+            name:"Massage Services",
+            desc:"Soothing and rejuvenating massages for body and mind relaxation, wellness, and stress relief therapy.",
+            icon:<TbMassage className='w-9 h-9'/>,
+            color:"bg-blue-400",
+            link:"/service/66db573c160a2e9fc7336fea"
+        },
+        {
+            name:"Pest Control Services",
+            desc:" Effective and safe elimination of unwanted pests, rodents, termites, and other unwanted creepy crawlies.",
+            icon:<FaBugSlash className='w-9 h-9'/>,
+            color:"bg-orange-400",
+            link:"/service/66db5769160a2e9fc7336ff1"
+        },
+        {
+            name:"Electrician Services",
+            desc:"Professional and prompt electrical installations, repairs, maintenance, and upgrades for homes",
             icon:<PlugZap className='w-9 h-9'/>,
             color:"bg-red-400",
-            link:""
+            link:"/service/66db57ad160a2e9fc7336fff"
         }
     ]
   return (
@@ -54,7 +61,8 @@ function ServicesSection() {
                 <h2 className='text-2xl md:text-3xl font-semibold text-gray-800'>We offer wide range of service.</h2>
             </div>
                 <div className='flex flex-row flex-wrap gap-6 justify-center mt-4'>
-                    {data?.map((e,index)=>(<div className='shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-md max-w-[300px] p-7 md:p-10 flex flex-col items-center text-center gap-3' key={index}>
+                    {data?.map((e,index)=>(<Link to={e.link}><div className='shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.20)] rounded-md max-w-[300px] p-7 md:p-8 flex flex-col items-center text-center gap-3' key={index}>
+                        
                         <div className='relative '>
                             <div className={`rounded-full w-[60px] h-[60px] ${e.color}`}>
                             </div>
@@ -62,9 +70,11 @@ function ServicesSection() {
                                 <div className='text-white'>{e.icon}</div>
                             </div>
                         </div>
-                        <div className='font-bold text-gray-900 text-xl'>{e.name}</div>
-                        <div className='text-gray-700 text-[14px]'>{e.desc}</div>
-                    </div>))}
+                        
+                        <div className='font-bold text-gray-800 text-xl '>{e.name}</div>
+                        <div className='text-gray-600 text-[14px]'>{e.desc}</div>
+                        
+                    </div></Link>))}
                 </div>
         </div>
     </div>

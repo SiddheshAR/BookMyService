@@ -3,7 +3,7 @@ import heroImg from '../../assets/hero_img.png'
 function HeroSection() {
   return (
     <div className=' bg-orange-100'>
-        <div className='max-w-7xl  pt-8 mx-auto flex flex-col md:flex-row px-5 md:px-8 '>
+        <div className='max-w-6xl  pt-8 mx-auto flex flex-col md:flex-row px-5 md:px-8 '>
           <div className='w-[90%] md:w-[50%] flex flex-col gap-6 justify-center'>
               <div>
                   <h1 className='text-4xl md:text-4xl lg:text-5xl font-bold text-gray-800 md:leading-[55px] justify-center'> <span className='text-[#075985] font-bold'>Professional </span>Services for your home.</h1>

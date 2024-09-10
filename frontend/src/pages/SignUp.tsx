@@ -13,10 +13,12 @@ import { setUser } from '../redux/slices/userSlice'
 
 
 import { useDispatch } from 'react-redux'
+import { Check, X } from 'lucide-react'
     function Register() {
         const navigate = useNavigate();
         const dispatch = useDispatch();
         const notify = (text:string) => toast.error(text);
+        let passCheckConstants = ["Lowercase letters","Uppercase letter.","Number.","Special characters.","Atleast 8 characters"]
         const [input,setInput]=useState({
             fullname:"",
             phoneNumber:0,
@@ -24,9 +26,34 @@ import { useDispatch } from 'react-redux'
             email:"",
             password:""
         })
-
+        const [passError,setPassError]=useState<string[]>([]);
         const inputHandle = (e)=>{
             setInput({...input,[e.target.name]:e.target.value})
+        }
+        console.log("Pass Error",passError);
+        const passCheck = (password:string)=>{
+            const errors:string[] =[];
+            if(!/[a-z]/.test(password)){
+                errors.push("Lowercase letters")
+            }
+            if(!/[A-Z]/.test(password)){
+                errors.push("Uppercase letter.")
+            }
+            if(!/\d/.test(password)){
+                errors.push("Number.")
+            }
+            if (!/[@$!%*?&]/.test(password)) {
+                errors.push("Special characters.");
+              }
+              if (password.length < 8) {
+                errors.push("Atleast 8 characters");
+              }
+              if(errors.length>0){
+                setPassError(errors)
+                return false
+              }else{
+                return true
+              }
         }   
         const handleSubmit = async(e)=>{
             e.preventDefault();
@@ -52,6 +79,10 @@ import { useDispatch } from 'react-redux'
             // }
             try{
                 console.log(input);
+                const passValidator = passCheck(input.password);
+                if(!passValidator){
+                    return null;
+                }
                 const resp = await axios.post(`${USER_API_ENDPOINT}/register`,input,{
                     headers:{
                         "Content-Type":"application/json"
@@ -65,9 +96,7 @@ import { useDispatch } from 'react-redux'
             }catch(error){
                 console.log(error);
                 toast.error("Something went wrong.")
-
             }
-
         }
   return (
     <div className=''>
@@ -96,7 +125,7 @@ import { useDispatch } from 'react-redux'
                 </div>     
             </div>
 
-            <div className=' p-4 md:px-6 md:py-10 w-[100%] md:w-[45%] '>
+            <div className=' p-2 md:px-6 md:py-10 w-[100%] md:w-[45%] '>
                 <h2 className='text-3xl font-semibold text-[#0d2836] '>
                     Register User
                 </h2>
@@ -127,6 +156,16 @@ import { useDispatch } from 'react-redux'
                         <label className='text-[14px] font-semibold text-gray-700' htmlFor='password'>Password</label>
                         <input  className='py-2  px-3 border border-gray-200 rounded-md  outline-gray-300 '  name="password" type="password" value={input.password}  onChange={inputHandle} placeholder='Enter Password'/>
                     </div>
+
+                        {passError && passError.length>0 ? 
+                        <div className='flex gap-2 flex-col md:col-span-2' >
+                        <h2 className='text-[16px]  text-gray-800'>Password must contain:</h2>
+                        <div className='grid grid-cols-1  md:grid-cols-2 gap-1'>
+                        {passCheckConstants.map((e,index)=>
+                        (<div className=' text-gray-600 text-[14px]' key={index}>{passError.includes(e)?<div className='flex flex-row items-center text-[12px] md:text-[16px]'><X className='text-red-500 w-4 h-4 md:w-6 md:h-6'/><p>{e}</p></div>:<div  className='flex flex-row items-center text-[12px] md:text-[16px]' ><Check className='text-green-500 w-4 h-4 md:w-6 md:h-6'/><p>{e}</p></div>}</div>)) }
+                        </div>
+                        </div>
+                        :null}
 
                     <div className='flex flex-col gap-4 md:col-span-2'>
                         <button onClick={handleSubmit} className='bg-yellow-300 hover:bg-yellow-400 rounded-md text-[17px] py-2 text-[#0d2836] font-semibold ' >Register user.</button>

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {Service} from "../../types/services";
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import { ArrowLeft, MoveLeft } from 'lucide-react';
 function ServiceDescription() {
-
+    const location = useLocation();
+    useEffect(()=>{
+        window.scrollTo(0, 0);
+    },[location])
     const {id} =useParams();
 
 //   console.log(id);

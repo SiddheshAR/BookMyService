@@ -50,7 +50,7 @@ import { useDispatch } from 'react-redux'
         }
   return (
     <div className=''>
-        <div className='max-w-6xl mx-auto py-10 px-10 flex flex-col md:flex-row '>
+        <div className='max-w-6xl mx-auto py-10 px-5 md:px-10 flex flex-col md:flex-row '>
             <div className='hidden md:block md:w-[45%] relative overflow-hidden'>
                 <div className='absolute w-[16%] h-[16%]  z-10 top-1 left-5 opacity-40'>
                     <img src={polkaLight}  className='object-cover rounded-full w-full h-full'/>
@@ -75,7 +75,7 @@ import { useDispatch } from 'react-redux'
                 </div>     
             </div>
 
-            <div className=' p-4 md:px-6 md:py-10 w-[100%] md:w-[45%] '>
+            <div className=' p-2 md:px-6 md:py-10 w-[100%] md:w-[45%] '>
                 <h2 className='text-3xl font-semibold text-[#0d2836] '>
                     Sign-in
                 </h2>
@@ -91,7 +91,7 @@ import { useDispatch } from 'react-redux'
                         <input  className='py-2  px-3 border border-gray-200 rounded-md  outline-gray-300 '  name="password" type="password" value={input.password}  onChange={inputHandle} placeholder='Enter Password'/>
                     </div>
                     <button onClick={handleSubmit} className='bg-yellow-300 hover:bg-yellow-400 rounded-md text-[17px] py-2 text-[#0d2836] font-semibold ' >Log in</button>
-                    <p className='text-gray-400 text-[15px] font-semibold'>Don't have an account? <Link to="/"><span className='text-blue-700 hover:text-blue-800'>Register here</span></Link> </p>
+                    <p className='text-gray-400 text-[15px] font-semibold'>Don't have an account? <Link to="/register"><span className='text-blue-700 hover:text-blue-800'>Register here</span></Link> </p>
                 </form>
             </div>
         </div>
