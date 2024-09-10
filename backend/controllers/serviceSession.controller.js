@@ -53,13 +53,15 @@ export const createServiceSession =async(req,res)=>{
                 success:false
             }))
         }
-        let {service,time,location,rating,status,duration,price,feedback,confirmationCode} = req.body;
-
+        let {service,time,location,duration,basePrice,totalPrice} = req.body;
+        if (!service || !time || !location || !duration || !basePrice || !totalPrice) {
+            return res.status(400).json({ message: "All required fields must be provided.",success:false });
+          }
         let serviceCreation =await ServiceSessionModel.create({
             userId:userId,service,
-            time,location,rating,
-            status,duration,price,
-            feedback,confirmationCode:"KZI7"
+            time,location,
+            duration,basePrice,totalPrice,
+            feedback:"",confirmationCode:"KZI7",status:"pending"
         })
 
         if(!serviceCreation){

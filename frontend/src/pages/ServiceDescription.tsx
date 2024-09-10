@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {Service} from "../../types/services";
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import { ArrowLeft, MoveLeft } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import {RootState} from '../redux/store';
+import { UserType} from '../../types/users'
+import { SESSION_API_ENDPOINT } from '../utils/constants';
+
 function ServiceDescription() {
+    const user:UserType = useSelector((state:RootState)=>state.auth.user);
     const location = useLocation();
+    const navigate = useNavigate();
     useEffect(()=>{
         window.scrollTo(0, 0);
     },[location])
@@ -36,7 +43,6 @@ function ServiceDescription() {
             </div>
         </div>
     }
-
     const RatingComponent = ({rating}:{rating:number}):JSX.Element=>{
         if(!rating){
             return(
@@ -50,6 +56,39 @@ function ServiceDescription() {
                 {ratingIndex.map((e,index)=>(<div key={index} >{e<=rating?<GoStarFill className='text-yellow-400' />:<GoStar className='text-yellow-400' />}</div>))}<span className='ml-1 text-[15px] text-gray-800'> ({rating})- Based on average rating.</span>
             </div>
         )
+    }
+console.log("Service Data",serviceData);
+console.log("User Data",user)
+
+    const handleSessionBooking = async(e)=>{
+        // let {service,time,location,rating,status,duration,price,feedback,confirmationCode} = req.body;
+
+        e.preventDefault();
+        const payload = {
+            service:serviceData?.name,
+            time:new Date().toISOString(),
+            location:user?.address,
+            duration:serviceData?.duration,
+            basePrice:serviceData?.price,
+            totalPrice:2000,
+        }
+        try{
+            const resp = await axios.post(`${SESSION_API_ENDPOINT}/createSession`,payload,{
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                withCredentials: true,
+            });
+            if(!resp){
+                console.log("Error")
+            }else{
+                console.log(resp);
+            }
+        }catch(error){
+            console.log(error)
+        }
+
+
     }
 
   return (
@@ -82,8 +121,8 @@ function ServiceDescription() {
                         </div>
                     </div>
                     <div className='flex flex-row gap-4 justify-center'>
-                    <button className='bg-[#0d2836] py-2 px-6 inline-block rounded-md text-white font-semibold'>Cancel</button> 
-                    <button className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
+                    <button onClick={()=>navigate("/")} className='bg-[#0d2836] py-2 px-6 inline-block rounded-md text-white font-semibold'>Cancel</button> 
+                    <button onClick={handleSessionBooking} className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
                 </div>
                     <div>
                         {/* Calendar */}
