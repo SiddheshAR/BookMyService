@@ -18,6 +18,9 @@ const managerSchema = mongoose.Schema({
     },
     phoneNumber:{
         type:Number
+    },
+    role:{
+        type:String
     }
 },{timestamps:true});
 

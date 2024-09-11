@@ -23,7 +23,8 @@ export const serviceProviderRegister =async(req,res)=>{
                 fullname,
                 email,
                 password:hashedPassword,
-                phoneNumber
+                phoneNumber,
+                role:"serviceProvider"
             });
         if(userCreate){
             return res.status(200).json({
@@ -44,6 +45,7 @@ export const serviceProviderRegister =async(req,res)=>{
 export const ServiceProviderLogin = async(req,res)=>{
     try{
         const {email,password}=req.body;
+        // console.log(email,password);
         if(!email || !password){
             return(
                 res.status(400).json({
@@ -53,7 +55,7 @@ export const ServiceProviderLogin = async(req,res)=>{
             )
         }
         let UserCheck = await ServiceProviderModel.findOne({email});
-
+        // console.log(UserCheck);
         if(!UserCheck){
             return(res.status(400).json({
                 message:"Something went wrong.",

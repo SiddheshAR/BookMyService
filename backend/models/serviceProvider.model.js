@@ -31,6 +31,9 @@ const serviceProviderSchema = mongoose.Schema({
     },
     servicesOffered:{
         type:[String]
+    },
+    role:{
+        type:String
     }
 },{timestamps:true})
 
