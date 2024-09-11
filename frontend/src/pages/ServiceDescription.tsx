@@ -9,33 +9,61 @@ import { useSelector } from 'react-redux';
 import {RootState} from '../redux/store';
 import { UserType} from '../../types/users'
 import { SESSION_API_ENDPOINT } from '../utils/constants';
+import { toast } from 'react-toastify';
 
 function ServiceDescription() {
-    const user:UserType = useSelector((state:RootState)=>state.auth.user);
+    const {id} =useParams();
+    const user:UserType |null = useSelector((state:RootState)=>state.auth.user);
+    const [serviceData,setServiceData]=useState<Service|null>(null);
+    const [basePrice,setBasePrice]=useState<number>();
+    const [totalPrice,setTotalPrice] = useState<number>();
+    const [offeringsList,setOfferingsList]=useState([]);
     const location = useLocation();
     const navigate = useNavigate();
+
     useEffect(()=>{
         window.scrollTo(0, 0);
     },[location])
-    const {id} =useParams();
 
-//   console.log(id);
-  const [serviceData,setServiceData]=useState<Service|null>(null);
+    // Handle Price Increment
+    useEffect(()=>{
+        console.log(offeringsList);
+        if ( basePrice == null || basePrice === undefined) {
+            return;
+        }
+        else{
+            if(basePrice){
+                // const totalSum = offeringsList.reduce((accumulator,currentValue)=>
+                //     accumulator+Number(currentValue[0]),0)+totalPrice;  
+                const totalSum = offeringsList.reduce((accumulator, currentValue) => {
+                    const price = Number(Object.values(currentValue)[0]);
+                    return accumulator + price;
+                }, basePrice);
+                // console.log(totalPrice);
+                console.log("Trigger")
+                setTotalPrice(totalSum);
+            }
+        }
+
+    },[offeringsList,basePrice])
+
     useEffect(()=>{
         const fetchServiceDetails = async()=>{
             try{
                 const resData = await axios.get(`http://localhost:5001/api/v1/service/getServiceById/${id}`);
                 console.log(resData?.data?.data);
                 if(resData?.data?.success){
-                    setServiceData(resData?.data?.data)
+                    setServiceData(resData?.data?.data);
+                    setTotalPrice(resData?.data?.data?.price)
+                    setBasePrice(resData?.data?.data?.price)
                 }
             }catch(error){
                 console.log("Error Fetching Data.",error)
             }
-
         }
         fetchServiceDetails();
     },[])
+
     if(!serviceData){
         <div>
             <div className='max-w-7xl px-10 border'>
@@ -43,6 +71,8 @@ function ServiceDescription() {
             </div>
         </div>
     }
+
+    // Component for generating Ratings
     const RatingComponent = ({rating}:{rating:number}):JSX.Element=>{
         if(!rating){
             return(
@@ -57,22 +87,41 @@ function ServiceDescription() {
             </div>
         )
     }
-console.log("Service Data",serviceData);
-console.log("User Data",user)
-
+    // console.log("Service Data",serviceData);
+    // console.log("User Data",user)
+    console.log(JSON.stringify(offeringsList));
+    const handleOfferings = (e:React.ChangeEvent<HTMLInputElement>)=>{
+        if(offeringsList.some((offering:{ [key: string]: number })=>offering[e.target.name])){
+            setOfferingsList(offeringsList.filter((offering:{ [key: string]: string })=> !offering[e.target.name]   ))
+        }else{
+            setOfferingsList([...offeringsList,{[e.target.name]:e.target.value}])
+        }
+    }
+    // console.log(offeringsList);
+    // Handle Session Booking function
     const handleSessionBooking = async(e)=>{
         // let {service,time,location,rating,status,duration,price,feedback,confirmationCode} = req.body;
 
         e.preventDefault();
-        const payload = {
+        const payload: {
+            service: string | undefined;
+            time: string;
+            location: string;
+            duration: string | undefined;
+            basePrice: number | undefined;
+            offerings?:Record<string, string>[];
+            totalPrice: number | undefined;
+        } = {
             service:serviceData?.name,
             time:new Date().toISOString(),
-            location:user?.address,
+            location:user?.address || "",
             duration:serviceData?.duration,
             basePrice:serviceData?.price,
-            totalPrice:2000,
+            offerings:offeringsList,
+            totalPrice:totalPrice ,
         }
         try{
+            // console.log(payload);
             const resp = await axios.post(`${SESSION_API_ENDPOINT}/createSession`,payload,{
                 headers: {
                     "Content-Type": "application/json"
@@ -82,13 +131,12 @@ console.log("User Data",user)
             if(!resp){
                 console.log("Error")
             }else{
-                console.log(resp);
+                toast.success("Service Booked!!");
             }
         }catch(error){
             console.log(error)
+            toast.error("Something went wrong!")
         }
-
-
     }
 
   return (
@@ -106,17 +154,35 @@ console.log("User Data",user)
                     <RatingComponent rating={4}/>
                     </div>
                     
-                    <h2 className='text-[24px] md:text-[26px] font-bold text-[#2e2e2e] '>₹ {serviceData?.price} Rs</h2>
+                    {/* <h2 className='text-[24px] md:text-[26px] font-bold text-[#2e2e2e] '>₹ {serviceData?.price} Rs</h2> */}
+                    <h2 className='text-[24px] md:text-[26px] font-bold text-[#2e2e2e] '>₹ {totalPrice?totalPrice:"NA"} Rs</h2>
+
                     {/* Offerings */}
                     <p className='text-gray-600 text-[14px]'>{serviceData?.description}</p>
                     <div className='rounded-md border py-4 px-4 md:px-6 my-2'>
                         <h2 className='font-bold text-[18px] text-gray-800'>Service Addons:</h2>
-                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 my-4'>
+                        <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 my-4'>
                         {serviceData?.offerings.map((e,index)=>(
-                            <div className='flex flex-row cursor-pointer rounded-md p-2 border justify-between' key={index}>
-                                <div>{e.name}</div>
+                            <label>
+
+                         <div className='flex flex-row cursor-pointer rounded-md p-2 border justify-between' key={index}>
+                            <div className='flex flex-row gap-2'>
+                                    <input
+                                    type="checkbox"
+                                    id="checkboxId"
+                                    name={`${e.name}`}
+                                    value={e.price}
+                                    onChange={handleOfferings}
+                                    />
+                                    <div>{e.name}</div>
+                               </div>
                                 <div>{e.price}</div>
-                            </div>
+                             </div>
+                          </label>
+                            // <div className='flex flex-row cursor-pointer rounded-md p-2 border justify-between' key={index}>
+                            //     <div>{e.name}</div>
+                            //     <div>{e.price}</div>
+                            // </div>
                         ))}
                         </div>
                     </div>

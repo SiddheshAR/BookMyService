@@ -61,7 +61,7 @@ export const createServiceSession =async(req,res)=>{
             userId:userId,service,
             time,location,
             duration,basePrice,totalPrice,
-            feedback:"",confirmationCode:"KZI7",status:"pending"
+            feedback:"",confirmationCode:"",status:"pending"
         })
 
         if(!serviceCreation){
