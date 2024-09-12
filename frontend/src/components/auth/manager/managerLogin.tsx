@@ -6,7 +6,7 @@ import axios from 'axios'
 import {toast } from 'react-toastify';
 import { useDispatch } from 'react-redux'
 import { setUser } from '../../../redux/slices/userSlice';
-import { MANAGER_API_ENDPOINT, USER_API_ENDPOINT } from '../../../utils/constants';
+import { MANAGER_API_ENDPOINT } from '../../../utils/constants';
 
 function ManagerLogin() {
   const navigate = useNavigate();

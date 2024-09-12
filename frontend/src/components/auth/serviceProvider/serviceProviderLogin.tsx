@@ -6,7 +6,7 @@ import axios from 'axios'
 import {toast } from 'react-toastify';
 import { useDispatch } from 'react-redux'
 import { setUser } from '../../../redux/slices/userSlice';
-import { SERVICEPROVIDER_API_ENDPOINT, USER_API_ENDPOINT } from '../../../utils/constants';
+import { SERVICEPROVIDER_API_ENDPOINT } from '../../../utils/constants';
 
     function ServiceProviderLogin() {
         const navigate = useNavigate();

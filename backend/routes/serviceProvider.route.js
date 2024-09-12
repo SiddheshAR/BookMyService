@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route("/register").post(serviceProviderRegister);
 router.route("/login").post(ServiceProviderLogin);
-router.route("/logout").post(serviceProviderLogout);
+router.route("/logout").get(isAuthenticated,AuthRoles("serviceProvider"),serviceProviderLogout);
 router.route("/create").post(CreateService);
 router.route("/getServiceProviders").get(isAuthenticated,AuthRoles("manager"),getServiceProviders);
 export default router;

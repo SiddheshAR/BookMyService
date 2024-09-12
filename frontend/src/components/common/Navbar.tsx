@@ -12,16 +12,17 @@ import {RootState} from '../../redux/store';
 import { UserType} from '../../../types/users'
 import { setUser } from '../../redux/slices/userSlice';
 import axios from 'axios';
-import { USER_API_ENDPOINT } from '../../utils/constants';
+import { MANAGER_API_ENDPOINT, SERVICEPROVIDER_API_ENDPOINT, USER_API_ENDPOINT } from '../../utils/constants';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 function Navbar() {
    
     const dispatch = useDispatch();
-    const user:UserType | null=useSelector((store:RootState)=>store.auth.user);
+    const user:UserType =useSelector((store:RootState)=>store.auth.user);
+    console.log(user);
     const notify = (text:string) => toast.error(text);
     const [toggleMenu,setToggleMenu] = React.useState(false);
-    const NavLinks = [
+    const UserNavLinks = [
         {
             name:"Home",
             link:"/"
@@ -52,6 +53,30 @@ function Navbar() {
             name:"Contact",
             link:"/",
         }]
+    const ServiceProviderNavLinks = [
+            {
+                name:"Home",
+                link:"/"
+            },
+            {
+                name:"Service Requests",
+                link:"/ServiceRequest"
+            },
+        ]
+        const ManagerNavLinks = [
+            {
+                name:"Home",
+                link:"/"
+            },
+            {
+                name:"Sessions",
+                link:"/"
+            },
+            {
+                name:"Providers",
+                link:"/"
+            }
+        ]
 //   let user = useSelector((store)=>store.auth.user);
 //   let toggleMenu = useSelector((store)=>store.toggle.menu);
   // console.log(toggleMenu);
@@ -72,17 +97,59 @@ function Navbar() {
         }
       }
   }
-  const handleLogout = async()=>{
+  const handleLogout = async(role:string)=>{
     try{
-        const res = await axios.get(`${USER_API_ENDPOINT}/logout`,{withCredentials: true});
-        
-        if(res){
-            console.log("Logged out Succesfully");
-            dispatch(setUser(null));
-            notify("Logged out successfully.")
+        if(role=="manager"){
+            const res = await axios.get(`${MANAGER_API_ENDPOINT}/logout`,{withCredentials: true});
+            if(res){
+                console.log("Logged out Succesfully");
+                dispatch(setUser({
+                    address:"",
+                    email:"",
+                    fullname:"",
+                    phoneNumber:0,
+                    role:"",
+                    _id:""
+                }));
+                notify("Logged out successfully.")
+            }else{
+                console.log("Something went wrong 1.")
+            }
+        }else if(role=="serviceProvider"){
+            const res = await axios.get(`${SERVICEPROVIDER_API_ENDPOINT}/logout`,{withCredentials: true});
+            if(res){
+                console.log("Logged out Succesfully");
+                dispatch(setUser({
+                    address:"",
+                    email:"",
+                    fullname:"",
+                    phoneNumber:0,
+                    role:"",
+                    _id:""
+                }));
+                notify("Logged out successfully.")
+            }else{
+                console.log("Something went wrong 1.")
+            }
         }else{
-            console.log("Something went wrong 1.")
+            const res = await axios.get(`${USER_API_ENDPOINT}/logout`,{withCredentials: true});
+            if(res){
+                console.log("Logged out Succesfully");
+                dispatch(setUser({
+                    address:"",
+                    email:"",
+                    fullname:"",
+                    phoneNumber:0,
+                    role:"",
+                    _id:""
+                }));
+                notify("Logged out successfully.")
+            }else{
+                console.log("Something went wrong 1.")
+            }
         }
+        
+
     }catch(error){
         console.log(error)
         console.log("Something went wrong.2")
@@ -103,7 +170,9 @@ function Navbar() {
             <div className='flex flex-row gap-4 items-center'>
                 
                 <div className='hidden md:flex  flex-row gap-4'>
-                    {NavLinks.map((e,index)=>(<Link to={e.link} key={index}>
+                    {/* {user !== null && user !== undefined && user?.role !== null && user?.role !== undefined?
+                    <div>Manager</div>:<div>User</div>} */}
+                    {user?.role =="manager"?ManagerNavLinks.map((e,index)=>(<Link to={e.link} key={index}>
                     <div 
                     onMouseEnter={()=>{if(e?.subNavbar)
                         {
@@ -130,12 +199,70 @@ function Navbar() {
                             </div>:null}
                         </div>
                     </div>
-                    </Link>))}
+                    </Link>)): user?.role =="serviceProvider"? ServiceProviderNavLinks.map((e,index)=>(<Link to={e.link} key={index}>
+                    <div 
+                    onMouseEnter={()=>{if(e?.subNavbar)
+                        {
+                            const dropdown = document.getElementById(`dropdown-${index}`);
+                            if (dropdown) {
+                            dropdown.style.display = 'block';
+                            }
+                        }
+                    }}  
+                    onMouseLeave={()=>{if(e?.subNavbar)
+                        {
+                            const dropdown = document.getElementById(`dropdown-${index}`);
+                            if (dropdown) {
+                            dropdown.style.display = 'none';
+                            }
+                        }
+                    }} 
+                        className=''>
+                        <h2>{e.name}</h2>
+                        <div className='absolute  '>
+                            {e?.subNavbar ? 
+                            <div id={`dropdown-${index}`}>
+                                {e?.subNavbar.map((f,index) => (<h2 key={index}>{f.name}</h2>))}
+                            </div>:null}
+                        </div>
+                    </div>
+                    </Link>)):
+                    UserNavLinks.map((e,index)=>(<Link to={e.link} key={index}>
+                    <div 
+                    onMouseEnter={()=>{if(e?.subNavbar)
+                        {
+                            const dropdown = document.getElementById(`dropdown-${index}`);
+                            if (dropdown) {
+                            dropdown.style.display = 'block';
+                            }
+                        }
+                    }}  
+                    onMouseLeave={()=>{if(e?.subNavbar)
+                        {
+                            const dropdown = document.getElementById(`dropdown-${index}`);
+                            if (dropdown) {
+                            dropdown.style.display = 'none';
+                            }
+                        }
+                    }} 
+                        className=''>
+                        <h2>{e.name}</h2>
+                        <div className='absolute  '>
+                            {e?.subNavbar ? 
+                            <div id={`dropdown-${index}`}>
+                                {e?.subNavbar.map((f,index) => (<h2 key={index}>{f.name}</h2>))}
+                            </div>:null}
+                        </div>
+                    </div>
+                    </Link>))
+                }
+
+                                           
                 </div>
-                {user? <button onClick={handleLogout} className='bg-yellow-300 hover:bg-yellow-400 rounded-md font-semibold py-1 px-2 md:py-2 md:px-5 text-[#123446]'  >Logout</button>:
+                { user && user.role !== "" ? <button onClick={()=>handleLogout(user.role)} className='bg-yellow-300 hover:bg-yellow-400 rounded-md font-semibold py-1 px-2 md:py-2 md:px-5 text-[#123446]'  >Logout</button>:
                 <div className='flex flex-row gap-2 items-center'>
-                    <Link to="/login"><button className='bg-yellow-300 hover:bg-yellow-400 rounded-md font-semibold py-1 px-2 md:py-2 md:px-5 text-[#123446]'>Login</button></Link>
-                    <Link to="/register"><button  className='py-1 px-2 md:py-2 md:px-5 text-gray-900 border rounded-md border-gray-200 hover:bg-gray-100 hover:text-sky-900'>SignUp</button></Link>
+                    <Link to="/login/user"><button className='bg-yellow-300 hover:bg-yellow-400 rounded-md font-semibold py-1 px-2 md:py-2 md:px-5 text-[#123446]'>Login</button></Link>
+                    <Link to="/register/user"><button  className='py-1 px-2 md:py-2 md:px-5 text-gray-900 border rounded-md border-gray-200 hover:bg-gray-100 hover:text-sky-900'>SignUp</button></Link>
                     <div className='md:hidden' onClick={handleMenuToggle}><Menu/></div>
                 </div>}
             </div>
@@ -145,7 +272,8 @@ function Navbar() {
       {/* Mobile Sidebar NavLinks */}
       <div className={`absolute z-50 min-h-[1200px] bg-orange-50  transition-all duration-300 ${toggleMenu?`left-0`:`left-[-100%]`} w-[200px] `}>
             <div className='flex flex-col gap-2 mt-8 px-4 '>
-                {NavLinks.map((e,index)=>(<Link to={"/"} key={index}>
+                {}
+                {UserNavLinks.map((e,index)=>(<Link to={"/"} key={index}>
                 <div
                     className=''>
                     {!e?.subNavbar?

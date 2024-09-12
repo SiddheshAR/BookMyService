@@ -4,7 +4,14 @@ const authSlice = createSlice({
     name:"auth",
     initialState:{
         loading:false,
-        user:null
+        user:{
+            address:"",
+            email:"",
+            fullname:"",
+            phoneNumber:0,
+            role:"",
+            _id:""
+        }
     },
     reducers:{
         setLoading:(state,action)=>{
