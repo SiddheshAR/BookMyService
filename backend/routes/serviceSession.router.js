@@ -9,7 +9,7 @@ const router = express.Router();
 router.route('/create').post(isAuthenticated,AuthRoles("manager"),CreateService);
 router.route('/getServices').get(getAllServices);
 router.route('/getServiceById/:id').get(getServiceByID);
-router.route('/getSessionById/:id').get(isAuthenticated,AuthRoles("user"),getSessionById);
+router.route('/getSessionByUser/:id').get(isAuthenticated,AuthRoles("user"),getSessionById);
 router.route('/getSessions').get(isAuthenticated,AuthRoles("manager"),getServiceSession);
 router.route('/createSession').post(isAuthenticated,createServiceSession);
 router.route('/updateStatus').post(isAuthenticated,AuthRoles("manager"),updateServiceStatus);

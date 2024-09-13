@@ -1,5 +1,7 @@
 
 import authSlice from "./slices/userSlice.ts";
+import sessionSlice from "./slices/sessionSlice.ts";
+
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import {
   persistStore,
@@ -20,7 +22,8 @@ const persistConfig = {
   }
 
   const rootReducer = combineReducers({
-        auth:authSlice
+        auth:authSlice,
+        session:sessionSlice
   })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

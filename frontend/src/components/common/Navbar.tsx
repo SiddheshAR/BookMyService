@@ -20,7 +20,6 @@ function Navbar() {
     const dispatch = useDispatch();
     const user:UserType =useSelector((store:RootState)=>store.auth.user);
     console.log(user);
-    const notify = (text:string) => toast.error(text);
     const [toggleMenu,setToggleMenu] = React.useState(false);
     const UserNavLinks = [
         {
@@ -70,7 +69,7 @@ function Navbar() {
             },
             {
                 name:"Sessions",
-                link:"/"
+                link:"/manage/sessions"
             },
             {
                 name:"Providers",
@@ -111,45 +110,44 @@ function Navbar() {
                     role:"",
                     _id:""
                 }));
-                notify("Logged out successfully.")
+                toast.success("Logged out successfully.")
             }else{
                 console.log("Something went wrong 1.")
             }
-        }else if(role=="serviceProvider"){
-            const res = await axios.get(`${SERVICEPROVIDER_API_ENDPOINT}/logout`,{withCredentials: true});
-            if(res){
-                console.log("Logged out Succesfully");
-                dispatch(setUser({
-                    address:"",
-                    email:"",
-                    fullname:"",
-                    phoneNumber:0,
-                    role:"",
-                    _id:""
-                }));
-                notify("Logged out successfully.")
+            }else if(role=="serviceProvider"){
+                console.log("ServiceProvid")
+                const res = await axios.get(`${SERVICEPROVIDER_API_ENDPOINT}/logout`,{withCredentials: true});
+                if(res){
+                    console.log("Logged out Succesfully");
+                    dispatch(setUser({
+                        address:"",
+                        email:"",
+                        fullname:"",
+                        phoneNumber:0,
+                        role:"",
+                        _id:""
+                    }));
+                    toast.success("Logged out successfully.")
+                }else{
+                    console.log("Something went wrong 1.")
+                }
             }else{
-                console.log("Something went wrong 1.")
+                const res = await axios.get(`${USER_API_ENDPOINT}/logout`,{withCredentials: true});
+                if(res){
+                    console.log("Logged out Succesfully");
+                    dispatch(setUser({
+                        address:"",
+                        email:"",
+                        fullname:"",
+                        phoneNumber:0,
+                        role:"",
+                        _id:""
+                    }));
+                    toast.success("Logged out successfully.")
+                }else{
+                    console.log("Something went wrong 1.")
+                }
             }
-        }else{
-            const res = await axios.get(`${USER_API_ENDPOINT}/logout`,{withCredentials: true});
-            if(res){
-                console.log("Logged out Succesfully");
-                dispatch(setUser({
-                    address:"",
-                    email:"",
-                    fullname:"",
-                    phoneNumber:0,
-                    role:"",
-                    _id:""
-                }));
-                notify("Logged out successfully.")
-            }else{
-                console.log("Something went wrong 1.")
-            }
-        }
-        
-
     }catch(error){
         console.log(error)
         console.log("Something went wrong.2")

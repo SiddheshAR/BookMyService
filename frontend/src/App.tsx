@@ -8,6 +8,8 @@ import Register from './pages/SignUp.tsx';
 import UserLogin from './components/auth/user/userLogin.tsx';
 import ServiceProviderLogin from './components/auth/serviceProvider/serviceProviderLogin.tsx';
 import ManagerLogin from './components/auth/manager/managerLogin.tsx';
+import SessionsList from './pages/SessionsList.tsx';
+import UserServices from './pages/UserServices.tsx';
 
 
 const appRouter = createBrowserRouter([
@@ -57,12 +59,20 @@ const appRouter = createBrowserRouter([
       <ServiceProviderLogin/>
     </Layout>
   },
-  // {
-  //   path:'/serviceProvider/login',
-  //   element:<Layout>
-      
-  //   </Layout>
-  // }
+  {
+    path:'/manage/sessions',
+    element:
+    <Layout>
+      <SessionsList/>
+    </Layout>
+  },
+  {
+    path:'/user/services',
+    element:
+    <Layout>
+      <UserServices/>
+    </Layout>
+  }
 ])
 
 
