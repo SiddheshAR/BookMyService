@@ -2,7 +2,10 @@ import  mongoose,{Schema}  from "mongoose";
 
 const ServiceSessionSchema = mongoose.Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userName:{type:String ,required:true},
+    userPhoneNumber:{type:Number},
     serviceProviderId:{type:Schema.Types.ObjectId,ref:"ServiceProvider",required:false},
+    serviceProviderName:{type:String},
     service: { type: String, required: true },
     time: { type: Date, required: true },
     location: { type: String, required: true },
@@ -15,8 +18,8 @@ const ServiceSessionSchema = mongoose.Schema({
     confirmationCode: { type: String},
     offerings: [
         {
-            name: { type: String, required: true },  // Offering name
-            price: { type: Number, required: true }  // Offering price
+            name: { type: String },  // Offering name
+            price: { type: Number }  // Offering price
         }
     ],
 

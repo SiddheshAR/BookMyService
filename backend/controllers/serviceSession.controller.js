@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { ServiceSessionModel } from "../models/servicesSession.model.js";
+import { User } from "../models/user.model.js";
+import { ServiceProviderModel } from "../models/serviceProvider.model.js";
 
 // Fetch Manager Data
 export const getServiceSession = async(req,res)=>{
@@ -53,16 +55,36 @@ export const createServiceSession =async(req,res)=>{
                 success:false
             }))
         }
-        let {service,time,location,duration,basePrice,totalPrice} = req.body;
-        if (!service || !time || !location || !duration || !basePrice || !totalPrice) {
+        // console.log(userId)
+        let userData = await User.findById(userId);
+        const {fullname,phoneNumber} = userData;
+        if(!userData){
+            return(res.status(400).json({
+                message:"Error Fetchin user details",
+                success:false
+            }))
+        }
+        let {service,time,location,duration,basePrice,totalPrice,offerings} = req.body;
+        // console.log("Debug 2");
+        // console.log(service,time,location,duration,basePrice,totalPrice,offerings);/
+        const offeringList = offerings.map((item)=>{
+            let name = Object.keys(item)[0];
+            let price = Number(Object.values(item)[0]);
+            return{name,price}
+        })
+        if ( !service || !time || !location || !duration || !basePrice || !totalPrice) {
             return res.status(400).json({ message: "All required fields must be provided.",success:false });
           }
+        //   console.log("UserData",userData.fullname,"User Phone Number",userData.phoneNumber);
         let serviceCreation =await ServiceSessionModel.create({
             userId:userId,service,
+            userName:fullname,
+            userPhoneNumber:phoneNumber,
             time,location,
-            duration,basePrice,totalPrice,
+            duration,basePrice,totalPrice,offerings:offeringList,
             feedback:"",confirmationCode:"",status:"pending"
         })
+        // console.log("Debug 3")
 
         if(!serviceCreation){
             return(res.status(400).json({
@@ -76,6 +98,7 @@ export const createServiceSession =async(req,res)=>{
             }))
         }
     }catch(error){
+        console.error("Error during session creation:", error);
         return(res.status(400).json({
             message:"Unable to create Service",
             success:false
@@ -171,3 +194,59 @@ export const getCurrentSessions = async(req,res)=>{
     }
 }
 
+export const assignServiceProvider = async(req,res)=>{
+    try{
+        const {sessionId,serviceproviderId,serviceproviderName} = req.body;
+        console.log(sessionId,serviceproviderId,serviceproviderName);
+        const findSession = await ServiceSessionModel.findById(sessionId);
+        if(!findSession){
+            return res.status(400).json({
+                message:"Session Not Found.",
+                success:false
+            })
+        }
+        const findServiceProvider = await ServiceProviderModel.findById(serviceproviderId);
+        if(!findServiceProvider){
+            return res.status(400).json({
+                message:"Service Provider Not Found.",
+                success:false
+            })
+        }
+  
+  
+        function CodeGenerator(){
+            let abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            let code = '';
+            for (let i = 0; i < 4; i++) {
+              let randomIndex = Math.floor(Math.random() * abc.length);
+              code += abc[randomIndex];
+            }
+            return code;
+                  }
+        let confirmCode = CodeGenerator();
+        const resp = await ServiceSessionModel.findByIdAndUpdate(sessionId,{
+            $set:{
+                serviceProviderId:findServiceProvider?._id,
+                serviceProviderName:findServiceProvider?.fullname,
+                confirmationCode:confirmCode,
+                status:'confirmed'
+            }
+        });
+        if(!resp){
+            return res.status(400).json({
+                message:"Couldnt update Data.",
+                success:false
+            })
+        }
+        return res.status(200).json({
+            message:"Success",
+            success:true
+        })
+    }catch(error){
+        console.log(error);
+        return res.status(400).json({
+            message:"Something went wrong.",
+            success:false
+        })
+    }
+}

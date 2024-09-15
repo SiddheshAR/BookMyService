@@ -9,8 +9,12 @@ import { fetchAllSessions, fetchUserSessions } from '../redux/slices/sessionSlic
 function SessionsList() {
     const navigate = useNavigate();
     const user:UserType =useSelector((store:RootState)=>store.auth.user);
-    const sessions = useSelector((store:RootState)=>store.session.allSessions);
-    console.log(sessions);
+    const AllSessions = useSelector((store:RootState)=>store.session.allSessions);
+    const LoadingAllSession = useSelector((store:RootState)=>store.session.loadingAllSessions);
+    const ErrorAllSession = useSelector((store:RootState)=>store.session.errorAllSessions);
+
+    // console.log(sessions);
+    // console.log(sessions);
     const dispatch = useDispatch();
    useEffect(()=>{
     if(user && user.role!== "manager"){
@@ -18,12 +22,14 @@ function SessionsList() {
        }
     if(user && user.role =="manager"){
         dispatch(fetchAllSessions()); 
-        dispatch(fetchUserSessions(user?._id)); 
+        // dispatch(fetchUserSessions(user?._id)); 
     }
-   },[user]);
+   },[]);
 
   return (
-    <div><SessionsListSection/></div>
+    <div className='max-w-6xl mx-auto px-6 my-4 md:my-10 border'>
+      <SessionsListSection AllSessions={AllSessions} LoadingAllSession={LoadingAllSession} ErrorAllSession={ErrorAllSession}/>
+    </div>
   )
 }
 
