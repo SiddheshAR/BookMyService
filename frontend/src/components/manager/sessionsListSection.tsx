@@ -1,7 +1,9 @@
 
-import React from 'react'
+import React, { useState } from 'react'
+import StatusModal from './StatusModal'
 
 function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession}) {
+  const [modelToggle,setModalToggle] =useState(false);
   if(LoadingAllSession){
     return(
     <div>
@@ -19,6 +21,7 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession}) {
   if(AllSessions){
     return (
       <div>
+        <StatusModal toggle={modelToggle} setToggle={setModalToggle}/>
           <h2>Sessions List</h2>
           <p>desc desc desc desc desc desc desc desc desc desc</p>
           <div className='mx-auto w-full overflow-x-auto'>
@@ -42,7 +45,7 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession}) {
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.userPhoneNumber}</th>
                     {item?.totalPrice == 0 || null || undefined?<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.basePrice}</th>:<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.totalPrice}</th>}
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.createdAt}</th>
-                    <th  className='text-center font-semibold px-2 py-2 text-gray-800'><button className='px-2 py-1 bg-yellow-400 text-gray-800 rounded-md cursor-pointer'>Assign</button></th>
+                    <th  className='text-center font-semibold px-2 py-2 text-gray-800'><button className='px-2 py-1 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setModalToggle(!modelToggle)}>Assign</button></th>
                 </tr>)}
               </tbody>
             </table>
