@@ -2,8 +2,13 @@
 import React, { useState } from 'react'
 import StatusModal from './StatusModal'
 
-function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession}) {
+function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession,ErrorServiceProviderList,ServiceProviderList,LoadServiceProviderList
+
+}) {
   const [modelToggle,setModalToggle] =useState(false);
+  // const [itemSelected,setSelectedItem] = useState({
+
+  // })
   if(LoadingAllSession){
     return(
     <div>
@@ -21,7 +26,9 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession}) {
   if(AllSessions){
     return (
       <div>
-        <StatusModal toggle={modelToggle} setToggle={setModalToggle}/>
+        <StatusModal  ErrorServiceProviderList={ErrorServiceProviderList}
+      ServiceProviderList={ServiceProviderList} 
+      LoadServiceProviderList={LoadServiceProviderList} toggle={modelToggle} setToggle={setModalToggle}/>
           <h2>Sessions List</h2>
           <p>desc desc desc desc desc desc desc desc desc desc</p>
           <div className='mx-auto w-full overflow-x-auto'>

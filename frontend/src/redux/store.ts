@@ -1,7 +1,7 @@
 
 import authSlice from "./slices/userSlice.ts";
 import sessionSlice from "./slices/sessionSlice.ts";
-
+import serviceProvider from "./slices/sessionProviderSlice.ts"
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import {
   persistStore,
@@ -24,7 +24,8 @@ const persistConfig = {
 
   const rootReducer = combineReducers({
         auth:authSlice,
-        session:sessionSlice
+        session:sessionSlice,
+        serviceProvider:serviceProvider
   })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -6,7 +6,7 @@ export const fetchAllSessions = createAsyncThunk(
     'sessions/fetchAllSessions', 
     async(_,{isRejectedWithValue})=>{
         try{
-            console.log("Debug");
+            // console.log("Debug");
             const response =await axios.get(`${SESSION_API_ENDPOINT}/getSessions`,{withCredentials: true,});
             return response.data.data;
         }catch(error){
