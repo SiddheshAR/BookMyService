@@ -31,10 +31,8 @@ function SessionsList() {
    },[]);
 
   return (
-    <div className='max-w-6xl mx-auto px-6 my-4 md:my-10 border'>
-      <SessionsListSection AllSessions={AllSessions} LoadingAllSession={LoadingAllSession} ErrorAllSession={ErrorAllSession} ErrorServiceProviderList={ErrorServiceProviderList}
-      ServiceProviderList={ServiceProviderList} 
-      LoadServiceProviderList={LoadServiceProviderList}
+    <div className='max-w-6xl mx-auto px-6 my-4 md:my-10'>
+      <SessionsListSection AllSessions={AllSessions} LoadingAllSession={LoadingAllSession} ErrorAllSession={ErrorAllSession} 
       />
     </div>
   )

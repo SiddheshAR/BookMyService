@@ -2,12 +2,16 @@
 import React, { useState } from 'react'
 import StatusModal from './StatusModal'
 
-function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession,ErrorServiceProviderList,ServiceProviderList,LoadServiceProviderList
+function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
 
 }) {
   const [modelToggle,setModalToggle] =useState(false);
+  const [activeItem,setActiveItem] = useState(null)
   // const [itemSelected,setSelectedItem] = useState({
-
+  const handleToggle = (item)=>{
+    setActiveItem(item)
+    setModalToggle(!modelToggle)
+  }
   // })
   if(LoadingAllSession){
     return(
@@ -26,11 +30,8 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession,Erro
   if(AllSessions){
     return (
       <div>
-        <StatusModal  ErrorServiceProviderList={ErrorServiceProviderList}
-      ServiceProviderList={ServiceProviderList} 
-      LoadServiceProviderList={LoadServiceProviderList} toggle={modelToggle} setToggle={setModalToggle}/>
-          <h2>Sessions List</h2>
-          <p>desc desc desc desc desc desc desc desc desc desc</p>
+        <StatusModal  toggle={modelToggle} setToggle={setModalToggle} activeItem={activeItem} setActiveItem={setActiveItem}/>
+          <h2 className='text-3xl font-semibold text-gray-800 px-2'>Sessions List</h2>
           <div className='mx-auto w-full overflow-x-auto'>
             <table className=' w-full '>
               <thead className='py-5'>
@@ -52,7 +53,7 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession,Erro
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.userPhoneNumber}</th>
                     {item?.totalPrice == 0 || null || undefined?<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.basePrice}</th>:<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.totalPrice}</th>}
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.createdAt}</th>
-                    <th  className='text-center font-semibold px-2 py-2 text-gray-800'><button className='px-2 py-1 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setModalToggle(!modelToggle)}>Assign</button></th>
+                    <th  className='text-center font-semibold px-2 py-2 text-gray-800'><button className='px-2 py-1 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>handleToggle(item)}>Assign</button></th>
                 </tr>)}
               </tbody>
             </table>
