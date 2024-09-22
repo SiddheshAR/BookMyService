@@ -13,9 +13,9 @@ function SessionsList() {
     const AllSessions = useSelector((store:RootState)=>store.session.allSessions);
     const LoadingAllSession = useSelector((store:RootState)=>store.session.loadingAllSessions);
     const ErrorAllSession = useSelector((store:RootState)=>store.session.errorAllSessions);
-    const ServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.allServiceProviders);
-    const LoadServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.loadingServiceProviders);
-    const ErrorServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.errorServiceProviders);
+    // const ServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.allServiceProviders);
+    // const LoadServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.loadingServiceProviders);
+    // const ErrorServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.errorServiceProviders);
     // console.log(sessions);
     // console.log(sessions);
     const dispatch = useDispatch();

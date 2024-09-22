@@ -46,7 +46,7 @@ function Navbar() {
         },
         {
             name:"Track Services",
-            link:"/",
+            link:"/user/booked_services",
         },
         {
             name:"Contact",

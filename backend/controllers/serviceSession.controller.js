@@ -145,47 +145,17 @@ export const updateServiceStatus = async(req,res)=>{
 
 export const getCurrentSessions = async(req,res)=>{
     try{
-        console.log("Debug1");
-        const {id,role} = req;
-        const objectID = mongoose.Types.ObjectId(id);
-        console.log(objectID);
-        // if (!mongoose.Types.ObjectId.isValid(id)) {
-        //     console.error("Invalid ObjectId format.");
-        //     return res.status(400).json({
-        //         message: "Invalid ID format.",
-        //         success: false
-        //     });
-        // }
-        // let objectId = mongoose.Types.ObjectId(id);
-        // console.log("Converted ObjectId:", objectId);
-        if(!id || !role){
-            return(res.status(400).json({
-                message:"Cant find valid Token & ID.",
-                success:false
-            }))
-        }
-        // console.log(id,role)
-        if(role=="user"){
-            console.log("Debug 2")
-            
-        //    let resData =  await ServiceSessionModel.find({["userId"]:"66d162c9e024d42e90827f7a"});
-        //    let resData =  await ServiceSessionModel.find({userId:toString(id)});
-        let resData = await ServiceSessionModel.find({ userId: mongoose.Types.ObjectId(id) });
-           console.log(resData);
-            console.log("Debug 3")
-
-           if(!res){
-            return(res.status(400).json({
-                message:"Failed to fetch Data.",
-                success:false
-            }))
-           }
-           return(res.status(200).json({
-            message:"Data Fetch Successfull.",
-            data:resData,
-            success:true
+        let userID =req;
+        // console.log(typeof userID.id);
+        // let {id} = req.body;
+        // console.log(typeof id);
+        const resp = await ServiceSessionModel.find({userId:userID.id})
+        // console.log("Response",resp);
+        return(res.status(200).json({
+            message:"Data fetched Successfull",
+            data:resp
         }))
-        }
+
     }catch(error){
         return(res.status(400).json({
             message:"Error Fetching Data",
