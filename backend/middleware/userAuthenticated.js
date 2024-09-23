@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 const isAuthenticated = async(req,res,next)=>{
     try{
         let token = req.cookies.token;
-        console.log(token)
         if(!token){
             return(res.status(400).json({
                 message:"Authentication Error,Token not found.",

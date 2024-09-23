@@ -11,6 +11,7 @@ import ManagerLogin from './components/auth/manager/managerLogin.tsx';
 import SessionsList from './pages/SessionsList.tsx';
 import UserServices from './pages/UserServices.tsx';
 import UserBookedSessions from './pages/UserBookedSessions.tsx';
+import ProfileUpdateForm from './components/serviceProvider/profileUpdate.tsx';
 
 
 const appRouter = createBrowserRouter([
@@ -79,6 +80,13 @@ const appRouter = createBrowserRouter([
     element:
     <Layout>
       <UserBookedSessions/>
+    </Layout>
+  },
+  {
+    path:'/serviceProvider/updateProfile',
+    element:
+    <Layout>
+        <ProfileUpdateForm/>
     </Layout>
   }
 ])

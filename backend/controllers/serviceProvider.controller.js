@@ -137,3 +137,41 @@ export const getServiceProviders =async (req,res)=>{
     }
 }
 
+export const updateServiceProviderData = async(req,res)=>{
+    try{
+        const {id} = req;
+        console.log(id);
+        let {fullname,skills,locationsOffer,availability,phoneNumber} = req.body;
+        const userCheck = await ServiceProviderModel.findById(id);
+        if(!userCheck){
+            return res.status(400).json({
+                message:"User Id Invalid,Please login again.",
+                success:false
+            })
+        }   
+        const updateUser = await ServiceProviderModel.findByIdAndUpdate(
+            id,
+            {$set:{fullname:fullname,servicesLocation:locationsOffer,availability:availability,
+                servicesOffered:skills,phoneNumber:phoneNumber
+            }},
+            {new:true}
+        );
+        if(!updateUser){
+            return res.status(400).json({
+                message:"Error Updating data.",
+                success:false
+            })
+        }
+
+        return res.status(200).json({
+            message:"Update Successfull.",
+            success:true
+        })
+    }catch(error){
+        return res.status(400).json({
+            message:"Something went wrong.",
+            success:false
+        })
+    }
+}
+
