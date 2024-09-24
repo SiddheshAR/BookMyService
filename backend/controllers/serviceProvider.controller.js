@@ -85,7 +85,8 @@ export const ServiceProviderLogin = async(req,res)=>{
             servicesLocation:UserCheck?.servicesLocation || [],
             ratings:UserCheck?.ratings || [],
             availability:UserCheck?.availability || [],
-            servicesOffered:UserCheck?.servicesOffered || []
+            servicesOffered:UserCheck?.servicesOffered || [],
+            role:"serviceProvider"
         }
 
         return(res.status(200).cookie("token",token,{maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({

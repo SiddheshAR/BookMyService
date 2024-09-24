@@ -37,7 +37,7 @@ const serviceProvider = createSlice({
             state.allServiceProviders=action.payload;
             state.loadingServiceProviders=false
         })
-        .addCase(fetchAllServiceProviders.rejected,(state,action)=>{
+        .addCase(fetchAllServiceProviders.rejected,(state)=>{
             state.errorServiceProviders=true
             state.loadingServiceProviders=false
         })

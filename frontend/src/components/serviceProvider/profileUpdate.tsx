@@ -8,7 +8,6 @@ import { setUser } from '../../redux/slices/userSlice';
 
 function ProfileUpdateForm() {
     const userData = useSelector((state)=>state.auth.user);
-    // console.log("UserDaata",userData);
     const dispatch = useDispatch();
     const [formData,setFormData] = useState({
         fullname:"",

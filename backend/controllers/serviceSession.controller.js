@@ -220,3 +220,27 @@ export const assignServiceProvider = async(req,res)=>{
         })
     }
 }
+
+export const getAssignedProvider =async (req,res)=> {
+    try{
+        const {id} = req;
+        // console.log(id);
+        const resp = await ServiceSessionModel.find({serviceProviderId:id});
+        if(resp){
+            const modifiedResp = resp.map(session => {
+                const { confirmationCode, ...sessionWithoutCode } = session.toObject(); 
+                return sessionWithoutCode; 
+            });
+            return res.status(200).json({
+                message:"Success",
+                data:modifiedResp,
+                success:true
+            })
+        }
+    }catch(error){
+        return res.status(400).json({
+            message:"Something went wrong.",
+            success:false
+        })
+    }
+}

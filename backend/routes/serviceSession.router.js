@@ -2,7 +2,7 @@ import express from 'express';
 import { CreateService,getAllServices,getServiceByID } from '../controllers/service.controller.js';
 import AuthRoles from '../middleware/AuthorizeRole.js';
 import isAuthenticated from '../middleware/userAuthenticated.js';
-import { createServiceSession,updateServiceStatus,getServiceSession, getSessionById, getCurrentSessions, assignServiceProvider } from '../controllers/serviceSession.controller.js';
+import { createServiceSession,updateServiceStatus,getServiceSession, getSessionById, getCurrentSessions, assignServiceProvider, getAssignedProvider } from '../controllers/serviceSession.controller.js';
 
 const router = express.Router();
 
@@ -15,5 +15,6 @@ router.route('/createSession').post(isAuthenticated,createServiceSession);
 router.route('/updateStatus').post(isAuthenticated,AuthRoles("manager"),updateServiceStatus);
 router.route('/getSessions').post(isAuthenticated,AuthRoles("user"),getCurrentSessions);
 router.route('/assignServiceProvider').put(isAuthenticated,AuthRoles("manager"),assignServiceProvider);
+router.route('/getServiceProvider').get(isAuthenticated,AuthRoles("serviceProvider"),getAssignedProvider);
 
 export default router;

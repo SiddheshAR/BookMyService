@@ -2,6 +2,7 @@
 import authSlice from "./slices/userSlice.ts";
 import sessionSlice from "./slices/sessionSlice.ts";
 import serviceProvider from "./slices/sessionProviderSlice.ts"
+import AssignedServices from "./slices/serviceProviderSessions.ts"
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import {
   persistStore,
@@ -19,13 +20,14 @@ const persistConfig = {
     key: 'root',
     version: 1,
     storage,
-    blacklist:['session']
+    blacklist:['session','assignedServices']
   }
 
   const rootReducer = combineReducers({
         auth:authSlice,
         session:sessionSlice,
-        serviceProvider:serviceProvider
+        serviceProvider:serviceProvider,
+        assignedServices:AssignedServices
   })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

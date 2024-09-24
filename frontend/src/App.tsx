@@ -1,6 +1,6 @@
 import './App.css'
 import Layout from './components/common/layout.tsx';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import Home from './pages/Home.tsx';
 import ServiceDescription from './pages/ServiceDescription.tsx';
 import Login from './pages/Login.tsx';
@@ -12,6 +12,35 @@ import SessionsList from './pages/SessionsList.tsx';
 import UserServices from './pages/UserServices.tsx';
 import UserBookedSessions from './pages/UserBookedSessions.tsx';
 import ProfileUpdateForm from './components/serviceProvider/profileUpdate.tsx';
+import { useSelector } from 'react-redux';
+import UnAuthorized from './pages/unAuthorized.tsx';
+import { useEffect } from 'react';
+import AssignedSessions from './pages/serviceProvider/AssignedSessions.tsx';
+
+const AuthenticatedRole = ()=>{
+  const user = useSelector(state=>state.auth.user);
+  return user;
+}
+
+  const ProtectedRoutes = ({role,children}:{role:string,children:React.ReactNode})=>{
+    const Navigate = useNavigate();
+    const user = useSelector(state=>state.auth.user);
+    const {role:userRole} = user || {};
+
+    useEffect(()=>{
+      if(!user ||  userRole ==""){
+        Navigate('/');
+      }
+      if(userRole != role){
+        Navigate('/unauthorized');
+      }
+    },[])
+    return(
+      <>
+      {children}      
+      </>
+    )
+  }
 
 
 const appRouter = createBrowserRouter([
@@ -22,7 +51,16 @@ const appRouter = createBrowserRouter([
         <Home />
       </Layout>
     )
-  },{
+  },
+  {
+    path:'/unauthorized',
+    element:(
+      <Layout>
+          <UnAuthorized/>
+      </Layout>
+    )
+  }
+  ,{
     path:'/service/:id',
     element:<Layout>
       <ServiceDescription/>
@@ -57,16 +95,21 @@ const appRouter = createBrowserRouter([
   },
   {
     path:'/serviceProvider/login',
-    element:<Layout>
+    element:
+    <ProtectedRoutes role={"manager"}>
+    <Layout>
       <ServiceProviderLogin/>
     </Layout>
+    </ProtectedRoutes>
   },
   {
     path:'/manage/sessions',
     element:
-    <Layout>
-      <SessionsList/>
-    </Layout>
+    <ProtectedRoutes role={"manager"}>
+      <Layout>
+        <SessionsList/>
+      </Layout>
+    </ProtectedRoutes>
   },
   {
     path:'/user/services',
@@ -78,21 +121,37 @@ const appRouter = createBrowserRouter([
   {
     path:'/user/booked_services',
     element:
-    <Layout>
-      <UserBookedSessions/>
-    </Layout>
+    <ProtectedRoutes role={"user"}>
+      <Layout>
+        <UserBookedSessions/>
+      </Layout>
+    </ProtectedRoutes>
   },
   {
     path:'/serviceProvider/updateProfile',
-    element:
+    element:(
+    <ProtectedRoutes role={"serviceProvider"}>
     <Layout>
         <ProfileUpdateForm/>
     </Layout>
+    </ProtectedRoutes>
+  )
+  },
+  {
+    path:'/serviceProvider/sessions',
+    element:(
+    <ProtectedRoutes role={"serviceProvider"}>
+      <Layout>
+          <AssignedSessions/>
+      </Layout>
+    </ProtectedRoutes>
+  )
   }
 ])
 
 
 function App() {
+  console.log("User Data",AuthenticatedRole());
   return (
     <RouterProvider router={appRouter} />
   );
