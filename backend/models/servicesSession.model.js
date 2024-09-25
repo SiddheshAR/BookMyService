@@ -10,7 +10,7 @@ const ServiceSessionSchema = mongoose.Schema({
     time: { type: Date, required: true },
     location: { type: String, required: true },
     managerId: { type: Schema.Types.ObjectId, ref: 'Manager' },
-    status: { type: String, enum: ['pending', 'confirmed', 'completed', 'started','canceled'], required: true },
+    status: { type: String, enum: ['pending', 'confirmed', 'completed', 'started','cancelled'], required: true },
     duration: { type: String },  // e.g., '60 minutes'
     basePrice: { type: Number },
     totalPrice:{type:Number},

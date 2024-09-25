@@ -110,7 +110,9 @@ export const createServiceSession =async(req,res)=>{
 export const updateServiceStatus = async(req,res)=>{
     try{
         let {sessionId,UpdatedStatus} = req.body;
-        let statusList =['pending' || 'confirmed' || 'completed' || 'canceled']
+        // console.log(UpdatedStatus,sessionId)
+
+        let statusList =['pending','confirmed' , 'completed' , 'cancelled' ,'started']
         if(!statusList.includes(UpdatedStatus)){
             return(res.status(400).json({
                 message:"Invalid Status Input.",

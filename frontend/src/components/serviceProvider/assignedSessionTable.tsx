@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import ConfirmationModal from './confirmationModal';
+import EditStatusModal from './EditStatusModal';
 
 function AssignedSessionTable() {
-    const [modalToggle,setModalToggle] = useState(false)
+    const [modalToggle,setModalToggle] = useState(false);
+    const [sessionStatus,setSessionStatus]=useState(null);
     const {assignedServices,loadingAssignedServices,errorLoadAssignedServices} = useSelector(state=>state.assignedServices);
 
     const [selectedItem,setSelectedItem]= useState(null);
@@ -33,6 +35,7 @@ function AssignedSessionTable() {
   return (
     <div>
         <ConfirmationModal selectedItem={selectedItem} setModalToggle={setModalToggle} closeModal={closeModal} modalToggle={modalToggle}/>
+        <EditStatusModal setSelectedItem={setSelectedItem} selectedItem={selectedItem}  sessionStatus={sessionStatus} setSessionStatus={setSessionStatus} />
                   <div className='mx-auto w-full overflow-x-auto'>
             <table className=' w-full '>
               <thead className='py-5'>
@@ -43,7 +46,7 @@ function AssignedSessionTable() {
                   <th  className='text-left px-3 py-3'>Customer Name</th>
                   <th  className='text-left px-3 py-3'>Customer Phone</th>
                   <th  className='text-left px-3 py-3'>Price</th>
-                  <th  className='text-left px-3 py-3'>Confirm Code</th>
+                  <th  className='text-left px-3 py-3'>Status</th>
                 </tr>
               </thead>
               <tbody >
@@ -61,10 +64,14 @@ function AssignedSessionTable() {
                         <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.userName}</th>
                         <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.userPhoneNumber}</th>
                         {item?.totalPrice == 0 || null || undefined?<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.basePrice}</th>:<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.totalPrice}</th>}
-                        <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.createdAt}</th>
-                        {item.status =="started"?<th>
-                          
-                        </th>:
+                        {/* <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.createdAt}</th> */}
+                        {item.status =="started"?<th  className='text-center font-semibold px-2 py-2 text-gray-800'>
+                          <div className='flex flex-row gap-1'>
+                          <button className='px-2 py-1 bg-blue-800 text-white rounded-md cursor-pointer' onClick={()=>{setSessionStatus("completed");setSelectedItem(item)}}>Finish</button>
+                          <button className='px-2 py-1 bg-red-600 text-white rounded-md cursor-pointer' onClick={()=>{setSessionStatus("cancelled"); setSelectedItem(item)}}>Cancel</button>
+                          </div>
+
+                        </th>: item.status == "completed" || item.status == "cancelled"?<th>                                                <th  className='text-center font-semibold px-2 py-2 text-gray-800'><button className='px-2 py-1 bg-gray-200 text-gray-500 rounded-md cursor-pointer'>Service Finished</button></th></th>  :
                                                 <th  className='text-center font-semibold px-2 py-2 text-gray-800'><button className='px-2 py-1 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>handleToggle(item)}>Confirm</button></th>
                         }
 

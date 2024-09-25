@@ -12,7 +12,7 @@ router.route('/getServiceById/:id').get(getServiceByID);
 router.route('/getSessionByUser/:id').get(isAuthenticated,AuthRoles("user"),getSessionById);
 router.route('/getSessions').get(isAuthenticated,AuthRoles("manager"),getServiceSession);
 router.route('/createSession').post(isAuthenticated,createServiceSession);
-router.route('/updateStatus').post(isAuthenticated,AuthRoles("manager"),updateServiceStatus);
+router.route('/updateStatus').post(isAuthenticated,AuthRoles("serviceProvider"),updateServiceStatus);
 router.route('/getSessions').post(isAuthenticated,AuthRoles("user"),getCurrentSessions);
 router.route('/assignServiceProvider').put(isAuthenticated,AuthRoles("manager"),assignServiceProvider);
 router.route('/getServiceProvider').get(isAuthenticated,AuthRoles("serviceProvider"),getAssignedProvider);
