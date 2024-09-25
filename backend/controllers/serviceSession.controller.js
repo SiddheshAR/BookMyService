@@ -185,7 +185,7 @@ export const assignServiceProvider = async(req,res)=>{
   
   
         function CodeGenerator(){
-            let abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            let abc = "ABCD123456789EFGHIJKLMNOPQRSTUVWXYZ123456789";
             let code = '';
             for (let i = 0; i < 4; i++) {
               let randomIndex = Math.floor(Math.random() * abc.length);
@@ -239,6 +239,45 @@ export const getAssignedProvider =async (req,res)=> {
         }
     }catch(error){
         return res.status(400).json({
+            message:"Something went wrong.",
+            success:false
+        })
+    }
+}
+
+export const sessionConfirmCode = async(req,res)=>{
+    try{
+        // const resp = await ServiceSessionModel.find({})
+        const {code,sessionId} = req.body;
+        // console.log(code);
+        // console.log(sessionId)
+        const fetchSession = await ServiceSessionModel.findById(sessionId);
+
+        if(!fetchSession){
+            return res.status(404).json({
+                message:"Incorrect Code",
+                success:false
+            })
+        }
+        if(fetchSession.confirmationCode===code){
+            console.log("Success")
+            fetchSession.status = "started"
+            const updatedSession = await fetchSession.save();
+            if(updatedSession){
+                return res.status(200).json({
+                    message:"Code Confirmed",
+                    success:true
+                })
+            }
+
+        }else{
+            return res.status(401).json({
+                message:"Incorrect Code",
+                success:false
+            })
+        }
+    }catch(error){
+        return res.status(500).json({
             message:"Something went wrong.",
             success:false
         })

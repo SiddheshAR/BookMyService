@@ -12,4 +12,6 @@ router.route("/logout").get(isAuthenticated,AuthRoles("serviceProvider"),service
 router.route("/updateProfile").post(isAuthenticated,AuthRoles("serviceProvider"),updateServiceProviderData);
 router.route("/create").post(CreateService);
 router.route("/getServiceProviders").get(isAuthenticated,AuthRoles("manager"),getServiceProviders);
+
+
 export default router;
