@@ -8,7 +8,7 @@ function Layout({children}) {
     <div>
         <Navbar/>
             {children}
-        {/* <Footer/> */}
+        <Footer/>
         <ToastContainer
             position="bottom-right"
             autoClose={3000}
