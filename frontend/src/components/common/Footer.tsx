@@ -78,12 +78,24 @@ function Footer() {
   ];
 
   return (
-    <div>
+    <div className="mt-10 md:mt-20">
       {/* Main Footer */}
-      <div className="w-full bg-amber-50">
-        <div className="max-w-7xl mx-auto px-6 gap-4 grid grid-cols-1 md:grid-cols-4 py-10">
+      <div className="w-full py-6 bg-gray-50">
+        <div className="max-w-6xl flex flex-col md:flex-row border-b justify-between gap-3 mx-auto px-6 py-8">
+              <div>
+                  <h3 className="text-3xl font-semibold text-gray-800 mb-2">Reach out to us.</h3>
+                  <p>Standard dummy text here.</p>
+              </div>
+              <div className=" my-3">
+                  <div className=" border-gray-700 relative">
+                    <input className="p-3 outline-none text-gray-600 w-full md:w-[380px] bg-gray-200 rounded-l-md" placeholder="Enter your Email id" />
+                    <button className="absolute  p-3 right-0 bg-sky-950 text-white rounded-md">Subscribe</button>
+                  </div>
+              </div>
+        </div>
+        <div className="max-w-6xl mx-auto px-6 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 py-10">
           <div>
-            <h3 className="text-gray-800 text-2xl font-bold mb-2">About us</h3>
+            <h3 className="text-gray-800 text-3xl md:text-2xl font-bold mb-2">About us</h3>
             <p className="text-black text-[15px]  tracking-wide">
               BookMyService is your go-to platform for booking reliable and
               professional services right at your doorstep. BookMyService
@@ -92,7 +104,7 @@ function Footer() {
             </p>
           </div>
           <div>
-            <h3 className="text-gray-800 text-2xl font-bold mb-2">
+            <h3 className="text-gray-800  text-3xl md:text-2xl font-bold mb-2">
               Our Misson
             </h3>
             <p className="text-black text-[15px]  tracking-wide">
@@ -100,19 +112,19 @@ function Footer() {
             </p>
           </div>
           <div>
-            <h3 className="text-gray-800 text-2xl font-bold mb-2">
+            <h3 className="text-gray-800  text-3xl md:text-2xl font-bold mb-2">
               Our Services
             </h3>
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col w-fit gap-1">
               {ServiceContent.map((e, index) => (
-                <li className="cursor-pointer  text-[14px] w-fit tracking-wide" key={index}>
+                <li className="cursor-pointer text-[16px] md:text-[14px]  tracking-wide" key={index}>
                   <Link to={e.link}>{e.name}</Link>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <h3 className="text-gray-800 text-2xl font-bold mb-2">
+            <h3 className="text-gray-800  text-3xl md:text-2xl font-bold mb-2">
               Contact Us
             </h3>
             <ul className="contact-list flex flex-col gap-1">

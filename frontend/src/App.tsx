@@ -62,7 +62,8 @@ const appRouter = createBrowserRouter([
   }
   ,{
     path:'/service/:id',
-    element:<Layout>
+    element:
+    <Layout>
       <ServiceDescription/>
     </Layout>
   },

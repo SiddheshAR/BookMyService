@@ -4,6 +4,7 @@ import ServicesSection from '../components/home-page/ServicesSection'
 import FaqSection from '../components/home-page/FaqSection'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import WhyChooseUsSection from '../components/home-page/whyChooseUs';
 
 function Home() {
   const user = useSelector((state)=>state.auth.user);
@@ -22,6 +23,7 @@ function Home() {
         <HeroSection/>
         <ServicesSection/>
         <FaqSection/>
+        <WhyChooseUsSection/>
     </div>
   )
 }
