@@ -10,17 +10,20 @@ import {RootState} from '../redux/store';
 import { UserType} from '../../types/users'
 import { SESSION_API_ENDPOINT } from '../utils/constants';
 import { toast } from 'react-toastify';
+import ServiceBookingModal from '../components/user/serviceBookingModal';
 
 function ServiceDescription() {
     const {id} =useParams();
     const user:UserType |null = useSelector((state:RootState)=>state.auth.user);
+    console.log("user:",user)
     const [serviceData,setServiceData]=useState<Service|null>(null);
     const [basePrice,setBasePrice]=useState<number>();
     const [totalPrice,setTotalPrice] = useState<number>();
     const [offeringsList,setOfferingsList]=useState([]);
+    const [bookingToggle,setBookingToggle] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-
+    // console.log("offeringsList",offeringsList)
     useEffect(()=>{
         window.scrollTo(0, 0);
     },[location])
@@ -89,7 +92,7 @@ function ServiceDescription() {
     }
     // console.log("Service Data",serviceData);
     // console.log("User Data",user)
-    console.log(JSON.stringify(offeringsList));
+    // console.log(JSON.stringify(offeringsList));
     const handleOfferings = (e:React.ChangeEvent<HTMLInputElement>)=>{
         if(offeringsList.some((offering:{ [key: string]: number })=>offering[e.target.name])){
             setOfferingsList(offeringsList.filter((offering:{ [key: string]: string })=> !offering[e.target.name]   ))
@@ -133,8 +136,10 @@ function ServiceDescription() {
             }else{
                 toast.success("Service Booked!!");
             }
+            setBookingToggle(false)
         }catch(error){
             console.log(error)
+            setBookingToggle(false)
             toast.error("Something went wrong!")
         }
     }
@@ -176,7 +181,7 @@ function ServiceDescription() {
                                     />
                                     <div>{e.name}</div>
                                </div>
-                                <div>{e.price}</div>
+                                <div>{e.price} Rs</div>
                              </div>
                           </label>
                             // <div className='flex flex-row cursor-pointer rounded-md p-2 border justify-between' key={index}>
@@ -188,7 +193,7 @@ function ServiceDescription() {
                     </div>
                     <div className='flex flex-row gap-4 justify-center'>
                     <button onClick={()=>navigate("/")} className='bg-[#0d2836] py-2 px-6 inline-block rounded-md text-white font-semibold'>Cancel</button> 
-                    <button onClick={handleSessionBooking} className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
+                    <button onClick={()=>setBookingToggle(true)} className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
                 </div>
                     <div>
                         {/* Calendar */}
@@ -207,10 +212,10 @@ function ServiceDescription() {
                 </div>
             </div>
             <div>
-                
 
             </div>
         </div>
+        <ServiceBookingModal offeringsList={offeringsList} user={user} totalPrice={totalPrice} serviceData={serviceData} bookingToggle={bookingToggle} setBookingToggle={setBookingToggle} handleSessionBooking={handleSessionBooking}/>
     </div>
   )
 }

@@ -47,7 +47,7 @@ function WhyChooseUsSection() {
     ]
 
   return (
-    <div className='max-w-6xl mx-auto px-3 md:px-2 '>
+    <div className='max-w-6xl my-14 mx-auto px-3 md:px-2 '>
         <div className=' px-4 relative'>
             <h2 className='text-3xl md:text-4xl text-gray-800 text-center font-semibold my-4'>Why Choose Us</h2>
             <p className='text-center text-[16px] md:text-[18px]'>Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.It was,PageMaker including versions of Lorem Ipsum.It was,Aldus PageMaker including versions of Lorem Ipsum.It was</p>
