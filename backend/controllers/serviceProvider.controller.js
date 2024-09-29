@@ -141,7 +141,7 @@ export const getServiceProviders =async (req,res)=>{
 export const updateServiceProviderData = async(req,res)=>{
     try{
         const {id} = req;
-        console.log(id);
+        // console.log(id);
         let {fullname,skills,locationsOffer,availability,phoneNumber} = req.body;
         const userCheck = await ServiceProviderModel.findById(id);
         if(!userCheck){

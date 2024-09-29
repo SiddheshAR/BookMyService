@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import UnAuthorized from './pages/unAuthorized.tsx';
 import { useEffect } from 'react';
 import AssignedSessions from './pages/serviceProvider/AssignedSessions.tsx';
+import UserProfileUpdate from './pages/user/userUpdate.tsx';
 
 const AuthenticatedRole = ()=>{
   const user = useSelector(state=>state.auth.user);
@@ -138,6 +139,17 @@ const appRouter = createBrowserRouter([
     </ProtectedRoutes>
   )
   },
+  {
+    path:'/user/updateProfile',
+    element:(
+    <ProtectedRoutes role={"user"}>
+    <Layout>
+        <UserProfileUpdate/>
+    </Layout>
+    </ProtectedRoutes>
+  )
+  }
+  ,
   {
     path:'/serviceProvider/sessions',
     element:(

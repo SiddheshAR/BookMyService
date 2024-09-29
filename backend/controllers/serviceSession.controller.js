@@ -24,7 +24,7 @@ export const getServiceSession = async(req,res)=>{
 export const getSessionById = async(req,res)=>{
     try{
         let userId=req.params.id;
-        console.log(userId)
+        // console.log(userId)
         let fetchDataByID = await ServiceSessionModel.find({["userId"]:userId});
         if(!fetchDataByID){
             return(res.status(400).json({
@@ -169,7 +169,7 @@ export const getCurrentSessions = async(req,res)=>{
 export const assignServiceProvider = async(req,res)=>{
     try{
         const {sessionId,serviceproviderId,serviceproviderName} = req.body;
-        console.log(sessionId,serviceproviderId,serviceproviderName);
+        // console.log(sessionId,serviceproviderId,serviceproviderName);
         const findSession = await ServiceSessionModel.findById(sessionId);
         if(!findSession){
             return res.status(400).json({
