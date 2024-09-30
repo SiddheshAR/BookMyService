@@ -21,9 +21,59 @@ function ServiceDescription() {
     const [totalPrice,setTotalPrice] = useState<number>();
     const [offeringsList,setOfferingsList]=useState([]);
     const [bookingToggle,setBookingToggle] = useState(false);
+    const [serviceTime,setServiceTime] = useState('');
+    const [serviceDate,setServiceDate] = useState('');
+    const [dateIndex,setDateIndex] = useState(null);
+    const TimeConstant = ["14:00","15:30","17:00","18:00","19:00","20:00"];
     const location = useLocation();
     const navigate = useNavigate();
     // console.log("offeringsList",offeringsList)
+
+    const getData = () =>{
+        let dates = [];
+        for(let i =0;i<8;i++){
+            const date = new Date();
+            date.setDate(date.getDate() + i);
+            const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
+            dates.push(utcDate.toISOString());
+            // dates.push(date);
+        }
+        return dates
+    }
+
+    const DatesComponent = ({dates})=>{
+        // console.log(dates);
+        const DatesPart= ({dateItem,activeIndex})=>{
+            // console.log(dateItem);
+
+            const weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const date = new Date(dateItem);
+            const weekDay = weekdayNames[date.getDay()];
+            const month = monthNames[date.getMonth()];
+            const day = date.getDate();
+            // console.log(weekDay);
+            return(
+                <div onClick={()=>setServiceDate(dateItem)} className='flex first:rounded-l-md flex-col items-center  cursor-pointer'>
+                    <div className='bg-gray-100 px-2 text-center py-1 w-full text-[13px] md:text-[17px]'>
+                        {weekDay}
+                    </div>
+                    <div className={`px-2  flex flex-col items-center ${activeIndex !== dateIndex?"text-blue-900 text-[12px] md:text-[15px] bg-white":"  text-white bg-blue-600" } py-2 `}>
+                        <p>{day}</p>
+                        <p>{month}</p>
+                    </div>
+                </div>
+            )
+
+        }
+        
+        return(<div className='max-w-[310px] md:min-w-[500px] md:max-w-[550px] rounded-md'>
+            <div className='grid grid-cols-8  '>
+            {dates.map((e,index)=><div className='rounded-md' onClick={()=>setDateIndex(index)} key={index}><DatesPart dateItem={e} activeIndex={index}/></div>)}
+            </div>
+        </div>)
+    }
+
     useEffect(()=>{
         window.scrollTo(0, 0);
     },[location])
@@ -90,9 +140,7 @@ function ServiceDescription() {
             </div>
         )
     }
-    // console.log("Service Data",serviceData);
-    // console.log("User Data",user)
-    // console.log(JSON.stringify(offeringsList));
+
     const handleOfferings = (e:React.ChangeEvent<HTMLInputElement>)=>{
         if(offeringsList.some((offering:{ [key: string]: number })=>offering[e.target.name])){
             setOfferingsList(offeringsList.filter((offering:{ [key: string]: string })=> !offering[e.target.name]   ))
@@ -100,8 +148,7 @@ function ServiceDescription() {
             setOfferingsList([...offeringsList,{[e.target.name]:e.target.value}])
         }
     }
-    // console.log(offeringsList);
-    // Handle Session Booking function
+
     const handleSessionBooking = async(e)=>{
         // let {service,time,location,rating,status,duration,price,feedback,confirmationCode} = req.body;
 
@@ -143,7 +190,7 @@ function ServiceDescription() {
             toast.error("Something went wrong!")
         }
     }
-
+    console.log(serviceTime)
   return (
     <div>
         <div className='max-w-6xl mx-auto my-10 px-5 md:px-10 '>
@@ -195,11 +242,26 @@ function ServiceDescription() {
                     <button onClick={()=>navigate("/")} className='bg-[#0d2836] py-2 px-6 inline-block rounded-md text-white font-semibold'>Cancel</button> 
                     <button onClick={()=>setBookingToggle(true)} className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
                 </div>
-                    <div>
+                    <div className='my-8 flex flex-col gap-4 items-center'>
                         {/* Calendar */}
+                        <h2 className='font-bold text-[18px] md:text-2xl text-gray-800'>Select a Date:</h2>
 
+                        <DatesComponent dates={getData()}/>
                         {/* Time */}
+                        <h2 className='font-bold text-[18px]  md:text-2xl text-gray-800'>Select a Time slot</h2>
+                        <div className='flex flex-row items-center  gap-4'>
+                            <h2>Pick a Custom Time:</h2>
+                            <input className='border p-1 rounded-md' value={serviceTime} onChange={(e)=>setServiceTime(e.target.value)} type="time" />
+
+                        </div>
+                        <div className='flex flex-row flex-wrap gap-3'>
+                                {TimeConstant.map((timeItems,index)=>
+                                    <div onClick={()=>setServiceTime(timeItems)} key={index} className={`px-4 border cursor-pointer ${serviceTime==timeItems?"bg-blue-700 text-white":"bg-white text-blue-700"} py-2 rounded-md`}>{timeItems} </div>
+                                    // serviceDate,setServiceDate
+                                )}
+                            </div>
                         <div>
+                        {/* const [serviceTime,setServiceTime] = useState(''); */}
 
                         </div>
                     </div>
