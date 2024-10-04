@@ -15,7 +15,6 @@ import ServiceBookingModal from '../components/user/serviceBookingModal';
 function ServiceDescription() {
     const {id} =useParams();
     const user:UserType |null = useSelector((state:RootState)=>state.auth.user);
-    console.log("user:",user)
     const [serviceData,setServiceData]=useState<Service|null>(null);
     const [basePrice,setBasePrice]=useState<number>();
     const [totalPrice,setTotalPrice] = useState<number>();
@@ -23,11 +22,15 @@ function ServiceDescription() {
     const [bookingToggle,setBookingToggle] = useState(false);
     const [serviceTime,setServiceTime] = useState('');
     const [serviceDate,setServiceDate] = useState('');
+    const [serviceDateTime, setServiceDateTime] = useState<Date | null>(null);
     const [dateIndex,setDateIndex] = useState(null);
     const TimeConstant = ["14:00","15:30","17:00","18:00","19:00","20:00"];
     const location = useLocation();
     const navigate = useNavigate();
     // console.log("offeringsList",offeringsList)
+    // console.log("Service Date Time",serviceDateTime);
+    // console.log("Service Date",serviceDate)
+    // console.log("Service Time",serviceTime)
 
     const getData = () =>{
         let dates = [];
@@ -40,7 +43,7 @@ function ServiceDescription() {
         }
         return dates
     }
-
+    // console.log(serviceDateTime);
     const DatesComponent = ({dates})=>{
         // console.log(dates);
         const DatesPart= ({dateItem,activeIndex})=>{
@@ -74,13 +77,30 @@ function ServiceDescription() {
         </div>)
     }
 
+      
+    useEffect(()=>{
+    
+    const handleTimeSelection = (time: string) => {
+        setServiceTime(time);
+        console.log(time);
+        if (serviceDate) {
+          const [hours, minutes] = time.split(':').map(Number);
+          console.log(hours,minutes);
+          const updatedDateTime = new Date(serviceDate);
+          updatedDateTime.setHours(hours, minutes);
+          setServiceDateTime(updatedDateTime);
+        }
+      }
+      handleTimeSelection(serviceTime)
+    },[serviceDate,serviceTime])
+
     useEffect(()=>{
         window.scrollTo(0, 0);
     },[location])
 
     // Handle Price Increment
     useEffect(()=>{
-        console.log(offeringsList);
+        // console.log(offeringsList);
         if ( basePrice == null || basePrice === undefined) {
             return;
         }
@@ -104,7 +124,7 @@ function ServiceDescription() {
         const fetchServiceDetails = async()=>{
             try{
                 const resData = await axios.get(`http://localhost:5001/api/v1/service/getServiceById/${id}`);
-                console.log(resData?.data?.data);
+                // console.log(resData?.data?.data);
                 if(resData?.data?.success){
                     setServiceData(resData?.data?.data);
                     setTotalPrice(resData?.data?.data?.price)
@@ -155,7 +175,7 @@ function ServiceDescription() {
         e.preventDefault();
         const payload: {
             service: string | undefined;
-            time: string;
+            time: Date | null;
             location: string;
             duration: string | undefined;
             basePrice: number | undefined;
@@ -163,7 +183,7 @@ function ServiceDescription() {
             totalPrice: number | undefined;
         } = {
             service:serviceData?.name,
-            time:new Date().toISOString(),
+            time:serviceDateTime,
             location:user?.address || "",
             duration:serviceData?.duration,
             basePrice:serviceData?.price,
@@ -190,7 +210,7 @@ function ServiceDescription() {
             toast.error("Something went wrong!")
         }
     }
-    console.log(serviceTime)
+    // console.log(serviceTime)
   return (
     <div>
         <div className='max-w-6xl mx-auto my-10 px-5 md:px-10 '>
@@ -238,10 +258,7 @@ function ServiceDescription() {
                         ))}
                         </div>
                     </div>
-                    <div className='flex flex-row gap-4 justify-center'>
-                    <button onClick={()=>navigate("/")} className='bg-[#0d2836] py-2 px-6 inline-block rounded-md text-white font-semibold'>Cancel</button> 
-                    <button onClick={()=>setBookingToggle(true)} className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
-                </div>
+
                     <div className='my-8 flex flex-col gap-4 items-center'>
                         {/* Calendar */}
                         <h2 className='font-bold text-[18px] md:text-2xl text-gray-800'>Select a Date:</h2>
@@ -260,10 +277,6 @@ function ServiceDescription() {
                                     // serviceDate,setServiceDate
                                 )}
                             </div>
-                        <div>
-                        {/* const [serviceTime,setServiceTime] = useState(''); */}
-
-                        </div>
                     </div>
                 </div>
                 {/* Product Images */}
@@ -271,6 +284,10 @@ function ServiceDescription() {
                     <div className='w-[80%] md:min-w-[280px] md:max-w-[320px] lg:min-w-[340px] lg:max-w-[400px] md:w-auto my-5'>
                         <img className='object-contain' src={serviceData?.img} />
                     </div>   
+                </div>
+                <div className='flex flex-row gap-4 justify-center'>
+                    <button onClick={()=>navigate("/")} className='bg-[#0d2836] py-2 px-6 inline-block rounded-md text-white font-semibold'>Cancel</button> 
+                    <button onClick={()=>setBookingToggle(true)} className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
                 </div>
             </div>
             <div>
