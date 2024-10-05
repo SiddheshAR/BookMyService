@@ -32,6 +32,21 @@ function AssignedSessionTable() {
       setModalToggle(true);
       setSelectedItem(item)
     }
+    const timeConverter = (time)=>{
+      const newTime = new Date(time);
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      const serviceTime = `${newTime.getHours()}:${newTime.getMinutes()}`;
+      const ampm = newTime.getHours() >= 12 ? 'pm' :'am';
+      const serviceDate = `${newTime.getDay()} ${months[newTime.getMonth()-1]} ${newTime.getFullYear()%100}`
+  
+      // return(<p></p>)
+      // console.log(timer)
+      // console.log(date)
+      return<span className='flex flex-row justify-around text-[14px] text-gray-700'> 
+      <p>{serviceDate}</p> 
+      <p>{serviceTime}{ampm}</p>
+       </span>
+    }
   return (
     <div>
         <ConfirmationModal selectedItem={selectedItem} setModalToggle={setModalToggle} closeModal={closeModal} modalToggle={modalToggle}/>
@@ -46,6 +61,7 @@ function AssignedSessionTable() {
                   <th  className='text-left px-3 py-3'>Customer Name</th>
                   <th  className='text-left px-3 py-3'>Customer Phone</th>
                   <th  className='text-left px-3 py-3'>Price</th>
+                  <th  className='text-left px-3 py-3'>Service Time</th>
                   <th  className='text-left px-3 py-3'>Status</th>
                 </tr>
               </thead>
@@ -64,7 +80,7 @@ function AssignedSessionTable() {
                         <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.userName}</th>
                         <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.userPhoneNumber}</th>
                         {item?.totalPrice == 0 || null || undefined?<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.basePrice}</th>:<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.totalPrice}</th>}
-                        {/* <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.createdAt}</th> */}
+                        <th className='text-left font-semibold px-2 py-2 text-gray-800'>{timeConverter(item?.time)}</th>
                         {item.status =="started"?<th  className='text-center font-semibold px-2 py-2 text-gray-800'>
                           <div className='flex flex-row gap-1'>
                           <button className='px-2 py-1 bg-blue-800 text-white rounded-md cursor-pointer' onClick={()=>{setSessionStatus("completed");setSelectedItem(item)}}>Finish</button>
