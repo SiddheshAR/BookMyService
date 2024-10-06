@@ -9,7 +9,7 @@ function AssignedSessions() {
     dispatch(fetchAssignedServices());
   },[])
   return (
-    <div className='max-w-6xl mx-auto px-10'>
+    <div className='max-w-6xl mx-auto px-3 md:px-10'>
         <AssignedSessionTable/>
     </div>
   )

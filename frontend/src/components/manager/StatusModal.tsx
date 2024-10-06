@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -10,7 +10,7 @@ const StatusModal = ({toggle,setToggle,activeItem,setActiveItem})=>{
     const ErrorServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.errorServiceProviders);
     const [selectedOption, setSelectedOption]  = useState(null);
     // console.log(selectedOption)
-
+    const dispatch = useDispatch();
     const modalRef = useRef(null);
     const handleClickOutside = (event:MouseEvent)=>{
         if(modalRef.current && !modalRef.current.contains(event.target as Node)){
@@ -34,7 +34,7 @@ const StatusModal = ({toggle,setToggle,activeItem,setActiveItem})=>{
             const resp = await axios.put(`http://localhost:5001/api/v1/service/assignServiceProvider`,data,{withCredentials:true});
             console.log(resp);
             if(resp){
-                toast.success("Assigned Succesfully.")
+                toast.success("Assigned Succesfully.");
             }
         }catch(error){
             console.log(error)

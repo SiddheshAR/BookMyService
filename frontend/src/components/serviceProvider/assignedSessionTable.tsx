@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ConfirmationModal from './confirmationModal';
 import EditStatusModal from './EditStatusModal';
@@ -7,8 +7,36 @@ function AssignedSessionTable() {
     const [modalToggle,setModalToggle] = useState(false);
     const [sessionStatus,setSessionStatus]=useState(null);
     const {assignedServices,loadingAssignedServices,errorLoadAssignedServices} = useSelector(state=>state.assignedServices);
-
     const [selectedItem,setSelectedItem]= useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 7;
+    const [SessionItems,setSessionItems] =useState(assignedServices || []);
+    const [filterStatus,setFilterStatus] = useState("none");
+    useEffect(()=>{
+      function handleFilter(){
+        if(filterStatus=="none"){
+          setSessionItems(assignedServices);
+        }
+        if(filterStatus == 'confirmed'){
+          const filterItems = assignedServices.filter((e)=>e.status == "confirmed");
+          setSessionItems(filterItems);
+          // console.log(filterItems);
+        }
+        if(filterStatus == 'completed'){
+          const filterItems = assignedServices.filter((e)=>e.status == "completed");
+          setSessionItems(filterItems);
+          // console.log(filterItems);
+        }
+        if(filterStatus == 'started'){
+          const filterItems = assignedServices.filter((e)=>e.status == "started");
+          setSessionItems(filterItems);
+          // console.log(filterItems);
+        }
+      }
+      if(assignedServices){
+        handleFilter();        
+      }
+    },[filterStatus,assignedServices])
     if(loadingAssignedServices){
         return(
             <div>
@@ -39,21 +67,29 @@ function AssignedSessionTable() {
       const ampm = newTime.getHours() >= 12 ? 'pm' :'am';
       const serviceDate = `${newTime.getDay()} ${months[newTime.getMonth()-1]} ${newTime.getFullYear()%100}`
   
-      // return(<p></p>)
-      // console.log(timer)
-      // console.log(date)
       return<span className='flex flex-row justify-around text-[14px] text-gray-700'> 
       <p>{serviceDate}</p> 
       <p>{serviceTime}{ampm}</p>
        </span>
     }
+    const totalPages = Math.ceil(SessionItems?.length/itemsPerPage);
+    // console.log("Total Pages:",totalPages)
+    const currentItems =  SessionItems.slice((itemsPerPage*(currentPage-1)),(currentPage*itemsPerPage))
   return (
     <div>
+                  <h2 className='text-xl'>Apply Filters</h2>
+
+          <div className='flex flex-row gap-3 my-3 flex-wrap'>
+            <button disabled={filterStatus=="none"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("none")}>None</button>
+            <button  disabled={filterStatus=="started"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("started")}>Started</button>
+            <button disabled={filterStatus=="completed"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("completed")}>Completed</button>
+            <button  disabled={filterStatus=="confirmed"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("confirmed")}>Confirmed</button>
+          </div>
         <ConfirmationModal selectedItem={selectedItem} setModalToggle={setModalToggle} closeModal={closeModal} modalToggle={modalToggle}/>
         <EditStatusModal setSelectedItem={setSelectedItem} selectedItem={selectedItem}  sessionStatus={sessionStatus} setSessionStatus={setSessionStatus} />
                   <div className='mx-auto w-full overflow-x-auto'>
             <table className=' w-full '>
-              <thead className='py-5'>
+              <thead className='py-2'>
                 <tr className=' text-gray-600 text-md text-[15px] border-b'>
                   <th className='text-left w- px-3 py-3'>Service Name</th>
                   <th className='text-left px-3 py-3'>Offerings</th>
@@ -67,7 +103,7 @@ function AssignedSessionTable() {
               </thead>
               <tbody >
                 {assignedServices && assignedServices.length>0?(
-                assignedServices?.map((item,index)=>
+                currentItems?.map((item,index)=>
                     <tr className='cursor-pointer hover:bg-gray-100 border-b' key={index}>
                         <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.service}</th>
                         <td className='text-left font-semibold px-2 py-2 text-gray-800 '>
@@ -97,6 +133,15 @@ function AssignedSessionTable() {
 
               </tbody>
             </table>
+            <div className='flex flex-row gap-3 my-3 justify-center'>
+            <button   onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className='px-2 py-1 disabled:bg-gray-200 disabled:text-gray-400 bg-gray-300 text-gray-800 rounded-md cursor-pointer' >Back</button>
+            {/* <button           
+            className='bg-gray-300 rounded-md px-2 m-1 py-2'>{currentPage}</button>
+            
+            <button  className='bg-gray-300 rounded-md px-2 m-1 py-2'>{totalPages}</button> */}
+            <button             onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages} className='px-2 py-1 disabled:bg-gray-200 disabled:text-gray-300 bg-gray-300 text-gray-800 rounded-md cursor-pointer' >Next Page</button>
+            </div>
           </div>
     </div>
   )

@@ -23,6 +23,7 @@ function ConfirmationModal({selectedItem,modalToggle,setModalToggle,closeModal})
             },{withCredentials:true});
             if(resp){
                 toast.success("Code Confirmed!");
+                console.log("Check")
                 dispatch(fetchAssignedServices());
                 closeModal();
             }

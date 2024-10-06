@@ -3,8 +3,12 @@ import React from 'react'
 import { IoMdClose } from 'react-icons/io';
 import { SESSION_API_ENDPOINT } from '../../utils/constants';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { fetchAssignedServices } from '../../redux/slices/serviceProviderSessions';
 
 function EditStatusModal({sessionStatus,setSessionStatus,setSelectedItem,selectedItem}) {
+  const dispatch = useDispatch();
+
   const handleCloseModal = ()=>{
     setSessionStatus(null);
   }
@@ -20,6 +24,7 @@ function EditStatusModal({sessionStatus,setSessionStatus,setSelectedItem,selecte
       });
       if(resp){
         toast.success("Update Successfull.");
+        dispatch(fetchAssignedServices());
         setSessionStatus(null);
         setSelectedItem(null);
       }
