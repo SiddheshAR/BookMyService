@@ -60,6 +60,8 @@ function UserLogin() {
         </div>
         <button onClick={handleSubmit} className='bg-yellow-300 hover:bg-yellow-400 rounded-md text-[17px] py-2 text-[#0d2836] font-semibold ' >Log in</button>
         <p className='text-gray-400 text-[15px] font-semibold'>Don't have an account? <Link to="/register"><span className='text-blue-700 hover:text-blue-800'>Register here</span></Link> </p>
+        <p className='text-gray-400 text-[15px] font-semibold'>Login as a Service Provider? <Link to="/login/serviceProvider"><span className='text-blue-700 hover:text-blue-800'>Login here</span></Link> </p>
+
     </form>
 
 </div>
