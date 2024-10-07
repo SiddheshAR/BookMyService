@@ -19,12 +19,17 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
       if(filterStatus == 'confirmed'){
         const filterItems = AllSessions.filter((e)=>e.status == "confirmed");
         setSessionItems(filterItems);
-        console.log(filterItems);
+        // console.log(filterItems);
       }
       if(filterStatus == 'cancelled'){
         const filterItems = AllSessions.filter((e)=>e.status == "cancelled");
         setSessionItems(filterItems);
-        console.log(filterItems);
+        // console.log(filterItems);
+      }
+      if(filterStatus == 'pending'){
+        const filterItems = AllSessions.filter((e)=>e.status == "pending");
+        setSessionItems(filterItems);
+        // console.log(filterItems);
       }
     }
     handleFilter();
@@ -73,6 +78,7 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
           <div className='flex flex-row gap-3 my-3'>
           <h2 className='text-xl'>Apply Filters</h2>
           <button disabled={filterStatus=="none"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("none")}>None</button>
+          <button  disabled={filterStatus=="pending"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("pending")}>Pending</button>
           <button disabled={filterStatus=="cancelled"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("cancelled")}>Cancelled</button>
           <button  disabled={filterStatus=="confirmed"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("confirmed")}>Confirmed</button>
           </div>

@@ -148,16 +148,11 @@ export const updateServiceStatus = async(req,res)=>{
 export const getCurrentSessions = async(req,res)=>{
     try{
         let userID =req;
-        // console.log(typeof userID.id);
-        // let {id} = req.body;
-        // console.log(typeof id);
         const resp = await ServiceSessionModel.find({userId:userID.id})
-        // console.log("Response",resp);
         return(res.status(200).json({
             message:"Data fetched Successfull",
             data:resp
         }))
-
     }catch(error){
         return(res.status(400).json({
             message:"Error Fetching Data",
@@ -199,6 +194,7 @@ export const assignServiceProvider = async(req,res)=>{
         const resp = await ServiceSessionModel.findByIdAndUpdate(sessionId,{
             $set:{
                 serviceProviderId:findServiceProvider?._id,
+                serviceProviderNumber:findServiceProvider?.phoneNumber,
                 serviceProviderName:findServiceProvider?.fullname,
                 confirmationCode:confirmCode,
                 status:'confirmed'
@@ -249,10 +245,7 @@ export const getAssignedProvider =async (req,res)=> {
 
 export const sessionConfirmCode = async(req,res)=>{
     try{
-        // const resp = await ServiceSessionModel.find({})
         const {code,sessionId} = req.body;
-        // console.log(code);
-        // console.log(sessionId)
         const fetchSession = await ServiceSessionModel.findById(sessionId);
 
         if(!fetchSession){

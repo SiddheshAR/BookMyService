@@ -2,9 +2,11 @@ import React from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { useNavigate } from 'react-router-dom';
 
-function ServiceBookingModal({user,offeringsList,totalPrice,serviceData,bookingToggle,setBookingToggle,handleSessionBooking}) {
+function ServiceBookingModal({serviceDateTime,user,offeringsList,totalPrice,serviceData,bookingToggle,setBookingToggle,handleSessionBooking}) {
 // console.log("OfferingList:",offeringsList)
 // console.log(user);
+console.log("Service Date Time",serviceDateTime);
+
 const navigate = useNavigate();
   return (
     <div>
@@ -17,7 +19,10 @@ const navigate = useNavigate();
             <div className='text-[14px] text-gray-600'>
                 <p>Name: {serviceData?.name}</p>
                 <p>Location: {user?.address}</p>
-                <p>Time: {serviceData?.time}</p>  
+                <p>Date: 
+                {serviceDateTime?.getDate()}/{serviceDateTime?.getMonth() + 1}/{serviceDateTime?.getFullYear()}
+                </p>
+                <p>Time: {serviceDateTime?.getHours()}:{serviceDateTime?.getMinutes().toString().padStart(2, '0')}</p>                
                 <p>Total Price: {totalPrice}</p>  
                 <p>Offerings:</p>
                 <ul className='list-disc pl-2'>

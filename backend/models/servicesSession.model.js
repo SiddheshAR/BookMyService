@@ -4,6 +4,7 @@ const ServiceSessionSchema = mongoose.Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     userName:{type:String ,required:true},
     userPhoneNumber:{type:Number},
+    serviceProviderNumber:{type:Number},
     serviceProviderId:{type:Schema.Types.ObjectId,ref:"ServiceProvider",required:false},
     serviceProviderName:{type:String},
     service: { type: String, required: true },

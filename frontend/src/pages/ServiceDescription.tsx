@@ -20,18 +20,14 @@ function ServiceDescription() {
     const [totalPrice,setTotalPrice] = useState<number>();
     const [offeringsList,setOfferingsList]=useState([]);
     const [bookingToggle,setBookingToggle] = useState(false);
-    const [serviceTime,setServiceTime] = useState('');
+    const [serviceTime,setServiceTime] = useState('00:00');
     const [serviceDate,setServiceDate] = useState('');
     const [serviceDateTime, setServiceDateTime] = useState<Date | null>(null);
     const [dateIndex,setDateIndex] = useState(null);
     const TimeConstant = ["14:00","15:30","17:00","18:00","19:00","20:00"];
     const location = useLocation();
     const navigate = useNavigate();
-    // console.log("offeringsList",offeringsList)
-    // console.log("Service Date Time",serviceDateTime);
-    // console.log("Service Date",serviceDate)
-    // console.log("Service Time",serviceTime)
-
+    // console.log(serviceDateTime);
     const getData = () =>{
         let dates = [];
         for(let i =0;i<8;i++){
@@ -79,13 +75,10 @@ function ServiceDescription() {
 
       
     useEffect(()=>{
-    
     const handleTimeSelection = (time: string) => {
         setServiceTime(time);
-        console.log(time);
         if (serviceDate) {
           const [hours, minutes] = time.split(':').map(Number);
-          console.log(hours,minutes);
           const updatedDateTime = new Date(serviceDate);
           updatedDateTime.setHours(hours, minutes);
           setServiceDateTime(updatedDateTime);
@@ -100,19 +93,16 @@ function ServiceDescription() {
 
     // Handle Price Increment
     useEffect(()=>{
-        // console.log(offeringsList);
         if ( basePrice == null || basePrice === undefined) {
             return;
         }
         else{
             if(basePrice){
-                // const totalSum = offeringsList.reduce((accumulator,currentValue)=>
-                //     accumulator+Number(currentValue[0]),0)+totalPrice;  
+
                 const totalSum = offeringsList.reduce((accumulator, currentValue) => {
                     const price = Number(Object.values(currentValue)[0]);
                     return accumulator + price;
                 }, basePrice);
-                // console.log(totalPrice);
                 console.log("Trigger")
                 setTotalPrice(totalSum);
             }
@@ -124,7 +114,6 @@ function ServiceDescription() {
         const fetchServiceDetails = async()=>{
             try{
                 const resData = await axios.get(`http://localhost:5001/api/v1/service/getServiceById/${id}`);
-                // console.log(resData?.data?.data);
                 if(resData?.data?.success){
                     setServiceData(resData?.data?.data);
                     setTotalPrice(resData?.data?.data?.price)
@@ -170,8 +159,6 @@ function ServiceDescription() {
     }
 
     const handleSessionBooking = async(e)=>{
-        // let {service,time,location,rating,status,duration,price,feedback,confirmationCode} = req.body;
-
         e.preventDefault();
         const payload: {
             service: string | undefined;
@@ -278,6 +265,10 @@ function ServiceDescription() {
                                 )}
                             </div>
                     </div>
+                    <div className='flex flex-row gap-4 justify-center'>
+                    <button onClick={()=>navigate("/")} className='bg-[#0d2836] py-2 px-6 inline-block rounded-md text-white font-semibold'>Cancel</button> 
+                    <button disabled={!serviceDateTime || !serviceTime} onClick={()=>setBookingToggle(true)} className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
+                </div>
                 </div>
                 {/* Product Images */}
                 <div className='flex flex-row justify-center'>
@@ -285,16 +276,13 @@ function ServiceDescription() {
                         <img className='object-contain' src={serviceData?.img} />
                     </div>   
                 </div>
-                <div className='flex flex-row gap-4 justify-center'>
-                    <button onClick={()=>navigate("/")} className='bg-[#0d2836] py-2 px-6 inline-block rounded-md text-white font-semibold'>Cancel</button> 
-                    <button onClick={()=>setBookingToggle(true)} className='bg-yellow-400 py-2 px-6 inline-block rounded-md text-[#0d2836] font-semibold'>Book service.</button>  
-                </div>
+
             </div>
             <div>
 
             </div>
         </div>
-        <ServiceBookingModal offeringsList={offeringsList} user={user} totalPrice={totalPrice} serviceData={serviceData} bookingToggle={bookingToggle} setBookingToggle={setBookingToggle} handleSessionBooking={handleSessionBooking}/>
+        <ServiceBookingModal serviceDateTime={serviceDateTime} offeringsList={offeringsList} user={user} totalPrice={totalPrice} serviceData={serviceData} bookingToggle={bookingToggle} setBookingToggle={setBookingToggle} handleSessionBooking={handleSessionBooking}/>
     </div>
   )
 }
