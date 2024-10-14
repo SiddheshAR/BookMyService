@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import ConfirmationModal from './confirmationModal';
 import EditStatusModal from './EditStatusModal';
+import { ServiceSession } from '../../../types/services';
 
 function AssignedSessionTable() {
-    const [modalToggle,setModalToggle] = useState(false);
-    const [sessionStatus,setSessionStatus]=useState(null);
+    const [modalToggle,setModalToggle] = useState<boolean>(false);
+    const [sessionStatus,setSessionStatus]=useState<string | null>(null);
     const {assignedServices,loadingAssignedServices,errorLoadAssignedServices} = useSelector(state=>state.assignedServices);
     const [selectedItem,setSelectedItem]= useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const itemsPerPage = 7;
-    const [SessionItems,setSessionItems] =useState(assignedServices || []);
-    const [filterStatus,setFilterStatus] = useState("none");
+    const [SessionItems,setSessionItems] =useState<ServiceSession[]>(assignedServices || []);
+    const [filterStatus,setFilterStatus] = useState<'none' | 'confirmed' | 'completed' | 'started'>("none");
     useEffect(()=>{
       function handleFilter(){
         if(filterStatus=="none"){

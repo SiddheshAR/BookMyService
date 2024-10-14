@@ -1,16 +1,17 @@
 
 import React, { useEffect, useState } from 'react'
 import StatusModal from './StatusModal'
+import { ServiceSession } from '../../../types/services';
 
 function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
 
-}) {
-  const [modelToggle,setModalToggle] =useState(false);
-  const [activeItem,setActiveItem] = useState(null)
-  const [currentPage, setCurrentPage] = useState(1);
+}:{AllSessions:ServiceSession[],LoadingAllSession:boolean,ErrorAllSession:boolean}) {
+  const [modelToggle,setModalToggle] =useState<boolean>(false);
+  const [activeItem,setActiveItem] = useState<ServiceSession | null>(null)
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 7;
-  const [SessionItems,setSessionItems] =useState(AllSessions || []);
-  const [filterStatus,setFilterStatus] = useState("none");
+  const [SessionItems,setSessionItems] =useState<ServiceSession[]>(AllSessions || []);
+  const [filterStatus,setFilterStatus] = useState<'none' | 'confirmed' | 'cancelled' | 'pending'> ("none");
   useEffect(()=>{
     function handleFilter(){
       if(filterStatus=="none"){

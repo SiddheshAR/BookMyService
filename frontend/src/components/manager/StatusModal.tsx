@@ -4,27 +4,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-const StatusModal = ({toggle,setToggle,activeItem,setActiveItem})=>{
+import { fetchAllSessions } from '../../redux/slices/sessionSlice';
+import { ServiceSession } from '../../../types/services';
+const StatusModal = ({toggle,setToggle,activeItem,setActiveItem}:{toggle:boolean, activeItem: ServiceSession | null})=>{
     const ServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.allServiceProviders);
     const LoadServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.loadingServiceProviders);
     const ErrorServiceProviderList = useSelector((store:RootState)=>store.serviceProvider.errorServiceProviders);
-    const [selectedOption, setSelectedOption]  = useState(null);
+    const [selectedOption, setSelectedOption]  = useState<string>("");
     // console.log(selectedOption)
     const dispatch = useDispatch();
-    const modalRef = useRef(null);
+    const modalRef = useRef<HTMLDivElement | null>(null);
     const handleClickOutside = (event:MouseEvent)=>{
         if(modalRef.current && !modalRef.current.contains(event.target as Node)){
             setToggle(false)
             setActiveItem(null)
         }
     }
-    const handleDropdown = (event)=>{
+    const handleDropdown = (event:React.ChangeEvent<HTMLSelectElement>)=>{
         setSelectedOption(event.target.value);
     }
 
     const handleUpdateSession = async()=>{
         try{
-            let optionData = selectedOption.split('|')
+            const optionData = selectedOption.split('|')
             const data = {
                 sessionId: activeItem?._id,
                 serviceproviderId: optionData?.[1],
@@ -35,6 +37,8 @@ const StatusModal = ({toggle,setToggle,activeItem,setActiveItem})=>{
             console.log(resp);
             if(resp){
                 toast.success("Assigned Succesfully.");
+                dispatch(fetchAllSessions()); 
+                setToggle(false)
             }
         }catch(error){
             console.log(error)
@@ -42,7 +46,6 @@ const StatusModal = ({toggle,setToggle,activeItem,setActiveItem})=>{
         }
     }
 
-    // console.log("Active Item",activeItem);
     useEffect(()=>{
         if(toggle){
             document.addEventListener('mousedown',handleClickOutside);
