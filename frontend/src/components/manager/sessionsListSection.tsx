@@ -12,6 +12,7 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
   const itemsPerPage = 7;
   const [SessionItems,setSessionItems] =useState<ServiceSession[]>(AllSessions || []);
   const [filterStatus,setFilterStatus] = useState<'none' | 'confirmed' | 'cancelled' | 'pending'> ("none");
+  console.log(AllSessions);
   useEffect(()=>{
     function handleFilter(){
       if(filterStatus=="none"){
@@ -34,13 +35,13 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
       }
     }
     handleFilter();
-  },[filterStatus])
-  // const [itemSelected,setSelectedItem] = useState({
+  },[filterStatus,AllSessions])
+
   const handleToggle = (item)=>{
     setActiveItem(item)
     setModalToggle(!modelToggle)
   }
-  // })
+
   if(LoadingAllSession){
     return(
     <div>
@@ -55,23 +56,52 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
           <h2>Sorry,We ran into a Error Please try again.</h2>
       </div>)
   }
-  const timeConverter = (time)=>{
+  const timeConverter = (time) => {
     const newTime = new Date(time);
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    const serviceTime = `${newTime.getHours()}:${newTime.getMinutes()}`;
-    const ampm = newTime.getHours() >= 12 ? 'pm' :'am';
-    const serviceDate = `${newTime.getDay()} ${months[newTime.getMonth()-1]} ${newTime.getFullYear()%100}`
-    return<span className='flex flex-row justify-around text-[14px] text-gray-700'> 
-    <p>{serviceDate}</p> 
-    <p>{serviceTime}{ampm}</p>
-     </span>
+    const serviceTime = `${newTime.getHours() % 12 || 12}:${newTime.getMinutes().toString().padStart(2, '0')}`;
+    const ampm = newTime.getHours() >= 12 ? 'pm' : 'am';
+    const serviceDate = `${newTime.getDate()} ${months[newTime.getMonth()]} ${newTime.getFullYear()}`
+    return (
+        <span className='flex flex-row justify-around text-[14px] text-gray-700'>
+            <p>{serviceDate}</p>
+            <p>{serviceTime}{ampm}</p>
+        </span>
+    )
+}
+  const StatusButton = (item)=>{
+    switch(item.status){
+        case "pending":
+          return(
+          <button className='px-2 py-1 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>handleToggle(item)}>Assign</button>)
+        case "cancelled":
+          return(
+            <button className='px-2 py-1 bg-red-400 text-white rounded-md cursor-pointer'>Cancel</button>
+          )
+        case "started":
+          return(
+            <button className='px-2 py-1 bg-green-600 text-white rounded-md cursor-pointer'>Started</button>
+          )
+          case "completed":
+            return(
+              <button className='px-2 py-1 bg-gray-600 text-white rounded-md cursor-pointer'>Completed</button>
+            )
+            case "confirmed":
+              return(
+                <button className='px-3 py-2 text-[11px] bg-blue-800 text-white rounded-md cursor-pointer'>
+                  <div className='flex flex-col'>
+                    <p>Confirmed</p>
+                    <p>Code:{item?.confirmationCode}</p>
+                  </div>
+                 
+                </button>
+              )
+    }
+
   }
-  
   if(SessionItems){
     const totalPages = Math.ceil(SessionItems?.length/itemsPerPage);
-    // console.log("Total Pages:",totalPages)
     const currentItems =  SessionItems.slice((itemsPerPage*(currentPage-1)),(currentPage*itemsPerPage))
-    // let currPage = (currentPage-1)
     return (
       <div>
         <div>
@@ -89,34 +119,35 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
           <div className='mx-auto w-full overflow-x-auto'>
             <table className=' w-full '>
               <thead className='py-5'>
-                <tr className=' text-gray-600 text-md text-[15px] border-b'>
+                <tr className=' text-gray-600 text-md text-[14px] border-b'>
                   <th className='text-left px-3 py-3'>Service Name</th>
                   <th  className='text-left px-3 py-3'>Location</th>
                   <th  className='text-left px-3 py-3'>Customer Name</th>
                   <th  className='text-left px-3 py-3'>Customer Phone</th>
                   <th  className='text-left px-3 py-3'>Price</th>
-                  <th  className='text-left px-3 py-3'>Created At</th>
+                  <th  className='text-left px-3 py-3'>Scheduled Time</th>
+                  <th className='text-left px-3 py-3'>Assigned Provider</th>
+                  <th className='text-left px-3 py-3'>Service Provider Contact</th>
                   <th  className='text-left px-3 py-3'>Confirmation Code</th>
                 </tr>
               </thead>
               <tbody >
-                {currentItems?.map((item,index)=><tr className='cursor-pointer hover:bg-gray-100 border-b' key={index}>
+                {currentItems?.map((item,index)=><tr className='cursor-pointer text-[14px] hover:bg-gray-100 border-b' key={index}>
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.service}</th>
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.location}</th>
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.userName}</th>
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.userPhoneNumber}</th>
                     {item?.totalPrice == 0 || null || undefined?<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.basePrice}</th>:<th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.totalPrice}</th>}
                     <th className='text-left font-semibold px-2 py-2 text-gray-800'>{timeConverter(item?.time)}</th>
-                    <th  className='text-center font-semibold px-2 py-2 text-gray-800'><button className='px-2 py-1 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>handleToggle(item)}>Assign</button></th>
+
+                    <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item?.serviceProviderName || 'Not Assigned'}</th>
+                    <th className='text-left font-semibold px-2 py-2 text-gray-800'>{item.serviceProviderNumber || 'Not Available'}</th>
+                    <th className='text-center font-semibold px-2 py-2 text-gray-800'>{StatusButton(item)}</th>
                 </tr>)}
               </tbody>
             </table>
             <div className='flex flex-row gap-3 my-3 justify-center'>
             <button   onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className='px-2 py-1 disabled:bg-gray-200 disabled:text-gray-400 bg-gray-300 text-gray-800 rounded-md cursor-pointer' >Back</button>
-            {/* <button           
-            className='bg-gray-300 rounded-md px-2 m-1 py-2'>{currentPage}</button>
-            
-            <button  className='bg-gray-300 rounded-md px-2 m-1 py-2'>{totalPages}</button> */}
             <button             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages} className='px-2 py-1 disabled:bg-gray-200 disabled:text-gray-300 bg-gray-300 text-gray-800 rounded-md cursor-pointer' >Next</button>
             </div>

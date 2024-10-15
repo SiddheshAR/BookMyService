@@ -8,7 +8,6 @@ import { TbMassage } from "react-icons/tb";
 import { FaBugSlash } from "react-icons/fa6";
 function ServicesSection() {
 
-
     const data = [
         {
             name:"House Cleaning Service",
@@ -55,7 +54,7 @@ function ServicesSection() {
     ]
   return (
     <div className='bg-white'>
-        <div className='max-w-5xl mt-4 pt-6 mx-auto flex flex-col  justify-center gap-4 px-5 md:px-8'>
+        <div className='max-w-5xl  mt-12 md:mt-12 pt-6 mx-auto flex flex-col  justify-center gap-4 px-5 md:px-8'>
             <div className='flex flex-col gap-2 items-center'>
                 <h4 className=' bg-orange-100 w-fit py-1 px-3 text-orange-600 rounded-xl text-center'>Services</h4>
                 <h2 className='text-2xl md:text-3xl font-semibold text-gray-800'>We offer wide range of service.</h2>

@@ -23,9 +23,8 @@ function SessionsList() {
     if(user && user.role =="manager"){
         dispatch(fetchAllSessions()); 
         dispatch(fetchAllServiceProviders());
-        // dispatch(fetchUserSessions(user?._id)); 
     }
-   },[]);
+   },[user]); 
 
   return (
     <div className='max-w-6xl mx-auto px-2 md:px-6 my-4 md:my-10'>

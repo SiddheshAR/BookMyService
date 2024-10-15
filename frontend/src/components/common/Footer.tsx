@@ -33,27 +33,27 @@ function Footer() {
   const ServiceContent = [
     {
       name: "HOUSE CLEANING",
-      link: "/",
+      link: "/service/66db5784160a2e9fc7336ff8",
     },
     {
       name: "SALON SERVICE",
-      link: "/",
+      link: "/service/66db56d9160a2e9fc7336fdd",
     },
     {
       name: "AC REPAIR & SERVICING",
-      link: "/",
+      link: "/service/66db5725160a2e9fc7336fe3",
     },
     {
       name: "MASSAGE SERVICES",
-      link: "/",
+      link: "/service/66db573c160a2e9fc7336fea",
     },
     {
       name: "PEST CONTROL SERVICES",
-      link: "/",
+      link: "/service/66db5769160a2e9fc7336ff1",
     },
     {
       name: "ELECTRICIAN SERVICES",
-      link: "/",
+      link: "/service/66db57ad160a2e9fc7336fff",
     },
   ];
   const ContactInfo = [
@@ -117,7 +117,7 @@ function Footer() {
             </h3>
             <ul className="flex flex-col w-fit gap-1">
               {ServiceContent.map((e, index) => (
-                <li className="cursor-pointer text-[16px] md:text-[14px]  tracking-wide" key={index}>
+                <li className="cursor-pointer text-[15px] hover:text-blue-700 md:text-[14px]  tracking-wide" key={index}>
                   <Link to={e.link}>{e.name}</Link>
                 </li>
               ))}

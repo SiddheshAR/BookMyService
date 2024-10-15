@@ -61,18 +61,19 @@ function AssignedSessionTable() {
       setModalToggle(true);
       setSelectedItem(item)
     }
-    const timeConverter = (time)=>{
+    const timeConverter = (time) => {
       const newTime = new Date(time);
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      const serviceTime = `${newTime.getHours()}:${newTime.getMinutes()}`;
-      const ampm = newTime.getHours() >= 12 ? 'pm' :'am';
-      const serviceDate = `${newTime.getDay()} ${months[newTime.getMonth()-1]} ${newTime.getFullYear()%100}`
-  
-      return<span className='flex flex-row justify-around text-[14px] text-gray-700'> 
-      <p>{serviceDate}</p> 
-      <p>{serviceTime}{ampm}</p>
-       </span>
-    }
+      const serviceTime = `${newTime.getHours() % 12 || 12}:${newTime.getMinutes().toString().padStart(2, '0')}`;
+      const ampm = newTime.getHours() >= 12 ? 'pm' : 'am';
+      const serviceDate = `${newTime.getDate()} ${months[newTime.getMonth()]} ${newTime.getFullYear()}`
+      return (
+          <span className='flex flex-row justify-around text-[14px] text-gray-700'>
+              <p>{serviceDate}</p>
+              <p>{serviceTime}{ampm}</p>
+          </span>
+      )
+  }
     const totalPages = Math.ceil(SessionItems?.length/itemsPerPage);
     // console.log("Total Pages:",totalPages)
     const currentItems =  SessionItems.slice((itemsPerPage*(currentPage-1)),(currentPage*itemsPerPage))
