@@ -76,7 +76,7 @@ function Navbar() {
             //     link:"/ServiceRequest"
             // },
         ]
-        const ManagerNavLinks = [
+    const ManagerNavLinks = [
             {
                 name:"Home",
                 link:"/"
@@ -90,7 +90,7 @@ function Navbar() {
                 link:"/"
             }
         ]
-        const GuestNavLinks = [
+    const GuestNavLinks = [
             {
                 name:"Home",
                 link:"/"

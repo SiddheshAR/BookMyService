@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 
 function BookedServices({bookedService,setBookedService}) {
     // console.log(bookedService);
@@ -6,36 +7,32 @@ function BookedServices({bookedService,setBookedService}) {
     const itemsPerPage = 7;
     const [SessionItems,setSessionItems] =useState(bookedService || []);
     const [filterStatus,setFilterStatus] = useState("none");
+    const [sortOrder, setSortOrder] = useState("asc"); // New state for sorting
+
+    const handleSort = (items) => {
+        return items.sort((a, b) => {
+            const timeA = new Date(a.time).getTime();
+            const timeB = new Date(b.time).getTime();
+            return sortOrder === "asc" ? timeA - timeB : timeB - timeA;
+        });
+    };
+
     useEffect(()=>{
-      function handleFilter(){
-        if(filterStatus=="none"){
-          setSessionItems(bookedService);
+      function handleFilter() {
+        let filterItems = bookedService;
+
+        // Filter by status if applicable
+        if (filterStatus !== "none") {
+            filterItems = filterItems.filter((e) => e.status === filterStatus);
         }
-        if(filterStatus == 'confirmed'){
-          const filterItems = bookedService.filter((e)=>e.status == "confirmed");
-          setSessionItems(filterItems);
-          // console.log(filterItems);
-        }
-        if(filterStatus == 'completed'){
-          const filterItems = bookedService.filter((e)=>e.status == "completed");
-          setSessionItems(filterItems);
-          // console.log(filterItems);
-        }
-        if(filterStatus == 'started'){
-          const filterItems = bookedService.filter((e)=>e.status == "started");
-          setSessionItems(filterItems);
-          // console.log(filterItems);
-        }
-        if(filterStatus == 'pending'){
-          const filterItems = bookedService.filter((e)=>e.status == "pending");
-          setSessionItems(filterItems);
-          // console.log(filterItems);
-        }
-      }
-      if(SessionItems){
-        handleFilter();        
-      }
-    },[filterStatus]);
+
+        // Sort items by time based on sortOrder
+        filterItems = handleSort(filterItems);
+        setSessionItems(filterItems);
+    }
+
+    handleFilter();
+    },[filterStatus,sortOrder,bookedService]);
 
     const timeConverter = (time) => {
       const newTime = new Date(time);
@@ -50,9 +47,6 @@ function BookedServices({bookedService,setBookedService}) {
           </span>
       )
   }
-    // useEffect(()=>{
-
-    // }[currentPage])
     const totalPages = Math.ceil(SessionItems?.length/itemsPerPage);
     // console.log("Total Pages:",totalPages)
     const currentItems =  SessionItems.slice((itemsPerPage*(currentPage-1)),(currentPage*itemsPerPage))
@@ -62,13 +56,18 @@ function BookedServices({bookedService,setBookedService}) {
         <h2 className='text-3xl font-semibold text-gray-800 px-2 my-4'>List of Booked Sessions</h2>
 
         <div className='flex flex-row gap-3 my-3 flex-wrap'>
-        <h2 className='text-[19px]'>Filters</h2>
+            <h2 className='text-[19px]'>Filters</h2>
             <button disabled={filterStatus=="none"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("none")}>None</button>
             <button  disabled={filterStatus=="pending"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("pending")}>Pending</button>
             <button  disabled={filterStatus=="started"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("started")}>Started</button>
             <button disabled={filterStatus=="completed"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("completed")}>Completed</button>
             <button  disabled={filterStatus=="confirmed"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("confirmed")}>Confirmed</button>
           </div>
+          <div className='flex flex-row gap-3 my-3'>
+                <button onClick={() => {setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); }} className='px-2 py-1 bg-yellow-400 rounded'>
+                    Sort by Time {sortOrder !== 'asc' ? <span className='inline-block mt-1'> <IoMdArrowDropup/></span> :<span className='inline-block mt-1'> <IoMdArrowDropdown /></span>}
+                </button>
+            </div>
           <div className='mx-auto w-full overflow-x-auto'>
             <table className=' w-full '>
               <thead className='py-5'>

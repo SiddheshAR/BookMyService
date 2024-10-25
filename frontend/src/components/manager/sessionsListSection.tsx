@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import StatusModal from './StatusModal'
 import { ServiceSession } from '../../../types/services';
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 
 function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
 
@@ -12,7 +13,9 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
   const itemsPerPage = 7;
   const [SessionItems,setSessionItems] =useState<ServiceSession[]>(AllSessions || []);
   const [filterStatus,setFilterStatus] = useState<'none' | 'confirmed' | 'cancelled' | 'pending'> ("none");
-  console.log(AllSessions);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [sortField, setSortField] = useState<'time' | 'price' | null>(null);
+  // console.log(AllSessions);
   useEffect(()=>{
     function handleFilter(){
       if(filterStatus=="none"){
@@ -36,7 +39,19 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
     }
     handleFilter();
   },[filterStatus,AllSessions])
-
+  useEffect(() => {
+    function handleSort() {
+        if (sortField) {
+            const sortedItems = [...SessionItems].sort((a, b) => {
+                const aValue = sortField === 'time' ? new Date(a.time).getTime() : a.totalPrice || a.basePrice;
+                const bValue = sortField === 'time' ? new Date(b.time).getTime() : b.totalPrice || b.basePrice;
+                return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+            });
+            setSessionItems(sortedItems);
+        }
+    }
+    handleSort();
+}, [sortOrder, sortField]);
   const handleToggle = (item)=>{
     setActiveItem(item)
     setModalToggle(!modelToggle)
@@ -107,12 +122,20 @@ function SessionsListSection({AllSessions,LoadingAllSession,ErrorAllSession
         <div>
 
           <div className='flex flex-row gap-3 my-3'>
-          <h2 className='text-xl'>Apply Filters</h2>
-          <button disabled={filterStatus=="none"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("none")}>None</button>
-          <button  disabled={filterStatus=="pending"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("pending")}>Pending</button>
-          <button disabled={filterStatus=="cancelled"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("cancelled")}>Cancelled</button>
-          <button  disabled={filterStatus=="confirmed"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("confirmed")}>Confirmed</button>
+            <h2 className='text-xl'>Apply Filters</h2>
+            <button disabled={filterStatus=="none"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("none")}>None</button>
+            <button  disabled={filterStatus=="pending"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("pending")}>Pending</button>
+            <button disabled={filterStatus=="cancelled"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("cancelled")}>Cancelled</button>
+            <button  disabled={filterStatus=="confirmed"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("confirmed")}>Confirmed</button>
           </div>
+          <div className="flex gap-4 mb-4">
+                <button onClick={() => { setSortField('time'); setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); }} className='px-2 py-1 bg-yellow-400 rounded'>
+                    Sort by Time {sortOrder === 'asc' && sortField === 'time' ? <span className='inline-block mt-1'> <IoMdArrowDropup/></span> :<span className='inline-block mt-1'> <IoMdArrowDropdown /></span>}
+                </button>
+                <button onClick={() => { setSortField('price'); setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); }} className='px-2 py-1 bg-yellow-400 rounded'>
+                    Sort by Price {sortOrder === 'asc' && sortField === 'price' ?<span className='inline-block mt-1'> <IoMdArrowDropup/></span> : <span className='inline-block mt-1'> <IoMdArrowDropdown /></span>}
+                </button>
+            </div>
         </div>
         <StatusModal  toggle={modelToggle} setToggle={setModalToggle} activeItem={activeItem} setActiveItem={setActiveItem}/>
           <h2 className='text-3xl font-semibold text-gray-800 px-2'>Sessions List</h2>

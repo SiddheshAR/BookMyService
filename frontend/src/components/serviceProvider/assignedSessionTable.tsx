@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import ConfirmationModal from './confirmationModal';
 import EditStatusModal from './EditStatusModal';
 import { ServiceSession } from '../../../types/services';
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 
 function AssignedSessionTable() {
     const [modalToggle,setModalToggle] = useState<boolean>(false);
@@ -13,31 +14,36 @@ function AssignedSessionTable() {
     const itemsPerPage = 7;
     const [SessionItems,setSessionItems] =useState<ServiceSession[]>(assignedServices || []);
     const [filterStatus,setFilterStatus] = useState<'none' | 'confirmed' | 'completed' | 'started'>("none");
-    useEffect(()=>{
-      function handleFilter(){
-        if(filterStatus=="none"){
-          setSessionItems(assignedServices);
-        }
-        if(filterStatus == 'confirmed'){
-          const filterItems = assignedServices.filter((e)=>e.status == "confirmed");
-          setSessionItems(filterItems);
-          // console.log(filterItems);
-        }
-        if(filterStatus == 'completed'){
-          const filterItems = assignedServices.filter((e)=>e.status == "completed");
-          setSessionItems(filterItems);
-          // console.log(filterItems);
-        }
-        if(filterStatus == 'started'){
-          const filterItems = assignedServices.filter((e)=>e.status == "started");
-          setSessionItems(filterItems);
-          // console.log(filterItems);
-        }
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [sortField, setSortField] = useState<'time' | 'price' | null>(null);
+
+    useEffect(() => {
+      function handleFilter() {
+          let filteredItems = assignedServices;
+          if (filterStatus !== "none") {
+              filteredItems = assignedServices.filter(e => e.status === filterStatus);
+          }
+          setSessionItems(filteredItems);
       }
-      if(assignedServices){
-        handleFilter();        
+      if (assignedServices) {
+          handleFilter();
       }
-    },[filterStatus,assignedServices])
+  }, [filterStatus, assignedServices]);
+
+  useEffect(() => {
+    function handleSort() {
+        if (sortField) {
+            const sortedItems = [...SessionItems].sort((a, b) => {
+                const aValue = sortField === 'time' ? new Date(a.time).getTime() : a.totalPrice || a.basePrice;
+                const bValue = sortField === 'time' ? new Date(b.time).getTime() : b.totalPrice || b.basePrice;
+                return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+            });
+            setSessionItems(sortedItems);
+        }
+    }
+    handleSort();
+}, [sortOrder, sortField]);
+
     if(loadingAssignedServices){
         return(
             <div>
@@ -87,6 +93,14 @@ function AssignedSessionTable() {
             <button disabled={filterStatus=="completed"} className='px-2 py-1  disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("completed")}>Completed</button>
             <button  disabled={filterStatus=="confirmed"}  className='px-2 py-1 disabled:bg-gray-300 bg-yellow-400 text-gray-800 rounded-md cursor-pointer' onClick={()=>setFilterStatus("confirmed")}>Confirmed</button>
           </div>
+          <div className="flex gap-4 mb-4">
+                <button onClick={() => { setSortField('time'); setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); }} className='px-2 py-1 bg-yellow-400 rounded'>
+                    Sort by Time {sortOrder === 'asc' && sortField === 'time' ? <span className='inline-block mt-1'> <IoMdArrowDropup/></span> :<span className='inline-block mt-1'> <IoMdArrowDropdown /></span>}
+                </button>
+                <button onClick={() => { setSortField('price'); setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); }} className='px-2 py-1 bg-yellow-400 rounded'>
+                    Sort by Price {sortOrder === 'asc' && sortField === 'price' ?<span className='inline-block mt-1'> <IoMdArrowDropup/></span> : <span className='inline-block mt-1'> <IoMdArrowDropdown /></span>}
+                </button>
+            </div>
         <ConfirmationModal selectedItem={selectedItem} setModalToggle={setModalToggle} closeModal={closeModal} modalToggle={modalToggle}/>
         <EditStatusModal setSelectedItem={setSelectedItem} selectedItem={selectedItem}  sessionStatus={sessionStatus} setSessionStatus={setSessionStatus} />
                   <div className='mx-auto w-full overflow-x-auto'>
